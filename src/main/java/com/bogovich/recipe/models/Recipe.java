@@ -3,6 +3,7 @@ package com.bogovich.recipe.models;
 import org.hibernate.engine.internal.Cascade;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class Recipe {
@@ -19,6 +20,10 @@ public class Recipe {
     private String directions;
     //TODO: Difficulty
     //private Difficulty difficulty;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
+    private Set<Ingredient> ingredients;
+
     @Lob
     private Byte[] image;
 
