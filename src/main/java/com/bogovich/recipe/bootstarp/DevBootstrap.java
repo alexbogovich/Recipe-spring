@@ -4,12 +4,16 @@ import com.bogovich.recipe.models.*;
 import com.bogovich.recipe.repositories.CategoryRepository;
 import com.bogovich.recipe.repositories.RecipeRepository;
 import com.bogovich.recipe.repositories.UnitOfMeasureRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.data.annotation.Transient;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-
+import java.util.ArrayList;
+import java.util.List;
+@Slf4j
 @Component
 public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
@@ -23,8 +27,15 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
         this.unitOfMeasureRepository = unitOfMeasureRepository;
     }
 
-    private void initData() {
+    private void saveAllRecipe(List<Recipe> recipeList){
+        log.debug("Start save AllRecipe");
+        recipeRepository.saveAll(recipeList);
+        log.debug("End save AllRecipe");
+    }
 
+    private List<Recipe> initData() {
+        log.debug("Start initData");
+        List<Recipe> recipeList = new ArrayList<>();
         //get optionals
         UnitOfMeasure eachUom = unitOfMeasureRepository.findByDescription("Each").orElseThrow(null);
         UnitOfMeasure tableSpoonUom = unitOfMeasureRepository.findByDescription("Tablespoon").orElseThrow(null);
@@ -77,7 +88,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
         guacRecipe.getCategories().add(americanCategory);
         guacRecipe.getCategories().add(mexicanCategory);
 
-        recipeRepository.save(guacRecipe);
+        recipeList.add(guacRecipe);
 
         Recipe tacosRecipe = new Recipe();
         tacosRecipe.setDescription("Spicy Grilled Chicken Taco");
@@ -133,12 +144,15 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
         tacosRecipe.getCategories().add(americanCategory);
         tacosRecipe.getCategories().add(mexicanCategory);
 
-        recipeRepository.save(tacosRecipe);
+        recipeList.add(tacosRecipe);
+        log.debug("End initData");
+        return recipeList;
     }
 
 
     @Override
+    @Transient
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        initData();
+        saveAllRecipe(initData());
     }
 }
