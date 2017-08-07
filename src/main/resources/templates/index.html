@@ -6,5 +6,22 @@
 </head>
 <body>
 <h1>My Recipes!!!!!!!</h1>
+<table class="RecipeContainer">
+    <tr th:each="recipe: ${recipeList}">
+        <td th:text="${recipe.description}">description</td>
+        <td th:text="${recipe.difficulty}">difficulty</td>
+        <td th:text="${recipe.prepTime}">prepTime</td>
+        <td th:text="${recipe.cookTime}">cookTime</td>
+        <td th:text="${recipe.servings}">servings</td>
+        <table class="RecipeIngredients">
+            <tr th:each="ingr: ${recipe.ingredients}">
+                <td th:text="${ingr.amount}"></td>
+                <td th:text="${ingr.uom.description}"></td>
+                <td th:text="${ingr.description}"></td>
+            </tr>
+        </table>
+        <td th:text="${recipe.url}">url</td>
+    </tr>
+</table>
 </body>
 </html>
