@@ -8,10 +8,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.Null;
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Optional;
 
 @Component
 public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> {
@@ -26,7 +23,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
         this.unitOfMeasureRepository = unitOfMeasureRepository;
     }
 
-    private void initData(){
+    private void initData() {
 
         //get optionals
         UnitOfMeasure eachUom = unitOfMeasureRepository.findByDescription("Each").orElseThrow(null);
