@@ -45,7 +45,16 @@ public class RecipeController {
     public String saveOrUpdate(@ModelAttribute Recipe recipe){
         log.debug(String.format("Receive %s recipe", recipe.getDescription()));
         Recipe saveOrUpdateRecipe = recipeService.saveRecipe(recipe);
-        log.debug(String.format("Save and return %s recipe with id:", recipe.getDescription(), recipe.getId()));
+        log.debug(String.format("Save and return %s recipe with id:%d", recipe.getDescription(), recipe.getId()));
         return "redirect:/recipe/"+saveOrUpdateRecipe.getId()+"/show";
+    }
+
+    @RequestMapping("recipe/{id}/delete")
+    public String deleteById(@PathVariable String id){
+
+        log.debug("Deleting id: " + id);
+
+        recipeService.deleteById(Long.valueOf(id));
+        return "redirect:/";
     }
 }

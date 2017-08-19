@@ -36,4 +36,9 @@ public class RecipeServiceImpl implements RecipeService {
         log.debug(String.format("Save recipe id:%d desc:%s", recipe.getId(), recipe.getDescription()));
         return recipeRepository.save(recipe);
     }
+
+    @Override
+    public void deleteById(Long l) {
+        recipeRepository.deleteById(l);
+    }
 }
