@@ -4,6 +4,7 @@ import com.bogovich.recipe.models.Recipe;
 import com.bogovich.recipe.repositories.RecipeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,5 +28,12 @@ public class RecipeServiceImpl implements RecipeService {
     public Recipe findById(Long l) {
         log.info(String.format("Get recipe by id %d", l));
         return recipeRepository.findById(l).orElseThrow(() -> new RuntimeException("No such recipe id"));
+    }
+
+    @Override
+    @Transactional
+    public Recipe saveRecipe(Recipe recipe) {
+        log.info("Save recipe");
+        return recipeRepository.save(recipe);
     }
 }
