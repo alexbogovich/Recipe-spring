@@ -33,13 +33,15 @@
                                 <th>ID</th>
                                 <th>Description</th>
                                 <th>View</th>
+                                <th>Update</th>
                             </tr>
                             </thead>
                             <tr th:each="recipe : ${recipeList}">
                                 <!--/*--><!--@thymesVar id="recipe" type="com.bogovich.recipe.models.Recipe"--><!--*/-->
                                 <td th:text="${recipe.id}">id</td>
                                 <td th:text="${recipe.description}">description</td>
-                                <td><a href="#" th:href="@{'/recipe/'+${recipe.id}+'/show'}">View</a></td>
+                                <td><a href="#" th:href="@{'/recipe/' + ${recipe.id} + '/show'}">View</a></td>
+                                <td><a href="#" th:href="@{'/recipe/' + ${recipe.id} + '/update'}">Update</a></td>
                             </tr>
                         </table>
                     </div>
