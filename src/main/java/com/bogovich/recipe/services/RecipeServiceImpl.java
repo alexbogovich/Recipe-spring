@@ -19,7 +19,13 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public List<Recipe> getAllRecipes() {
-        log.debug("Get all recipe");
+        log.info("Get all recipe");
         return (List<Recipe>) recipeRepository.findAll();
+    }
+
+    @Override
+    public Recipe findById(Long l) {
+        log.info(String.format("Get recipe by id %d", l));
+        return recipeRepository.findById(l).orElseThrow(() -> new RuntimeException("No such recipe id"));
     }
 }
