@@ -1,12 +1,14 @@
 package com.bogovich.recipe.models;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
+@ToString(of = {"id", "description"})
 @Entity
 public class Recipe {
 
@@ -48,6 +50,17 @@ public class Recipe {
     public Recipe addIngredient(Ingredient ingredient) {
         this.ingredients.add(ingredient);
         ingredient.setRecipe(this);
+        return this;
+    }
+
+    public Recipe updateIngredient(Ingredient ingredient){
+        ingredients.forEach(i -> {
+            if (i.getId().equals(ingredient.getId())){
+                i.setAmount(ingredient.getAmount());
+                i.setDescription(ingredient.getDescription());
+                i.setUom(ingredient.getUom());
+            }
+        });
         return this;
     }
 }

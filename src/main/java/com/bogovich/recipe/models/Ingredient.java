@@ -2,12 +2,14 @@ package com.bogovich.recipe.models;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Data
 @EqualsAndHashCode(exclude = "recipe")
+@ToString(of = {"id", "description"})
 @Entity
 public class Ingredient {
     @Id

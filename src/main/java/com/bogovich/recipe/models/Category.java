@@ -1,6 +1,8 @@
 package com.bogovich.recipe.models;
 
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -8,6 +10,7 @@ import java.util.Set;
 
 @Data
 @EqualsAndHashCode(exclude = "recipes")
+@ToString(of = {"id", "description"})
 @Entity
 public class Category {
 

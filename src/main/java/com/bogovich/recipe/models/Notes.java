@@ -1,11 +1,14 @@
 package com.bogovich.recipe.models;
 
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 
 @Data
 @EqualsAndHashCode(exclude = "recipe")
+@ToString(of = {"id", "recipeNotes"})
 @Entity
 public class Notes {
     @Id
