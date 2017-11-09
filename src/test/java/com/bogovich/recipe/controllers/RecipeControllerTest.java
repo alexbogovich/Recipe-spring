@@ -10,20 +10,21 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.Random;
+
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class RecipeControllerTest {
-
     @Mock
-    RecipeService recipeService;
+    private RecipeService recipeService;
 
-    RecipeController recipeController;
+    private RecipeController recipeController;
 
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @Before
     public void setUp() throws Exception {
@@ -34,7 +35,7 @@ public class RecipeControllerTest {
 
     @Test
     public void showById() throws Exception {
-        Long id = 1L;
+        Long id = new Random().nextLong();
         Recipe recipe = new Recipe();
         recipe.setId(id);
 
@@ -56,7 +57,7 @@ public class RecipeControllerTest {
 
     @Test
     public void postNewRecipe() throws Exception {
-        Long id = 2L;
+        Long id = new Random().nextLong();
         Recipe recipe = new Recipe();
         recipe.setId(id);
 
@@ -73,7 +74,7 @@ public class RecipeControllerTest {
 
     @Test
     public void saveOrUpdate() throws Exception {
-        Long id = 2L;
+        Long id = new Random().nextLong();
         Recipe recipe = new Recipe();
         recipe.setId(id);
 
@@ -85,4 +86,9 @@ public class RecipeControllerTest {
                 .andExpect(model().attributeExists("recipe"));
     }
 
+
+    @Test
+    public void deleteById() throws Exception {
+        Long id = new Random().nextLong(); mockMvc.perform(get(String.format("/recipe/%d/delete", id))).andExpect(status().is3xxRedirection()).andExpect(view().name("redirect:/")); verify(recipeService, times(1)).deleteById(id);
+    }
 }

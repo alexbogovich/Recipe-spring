@@ -28,7 +28,7 @@ public class Recipe {
     private Difficulty difficulty;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
-    private Set<Ingredient> ingredients = new HashSet<Ingredient>();
+    private Set<Ingredient> ingredients = new HashSet<>();
 
     @Lob
     private Byte[] image;
@@ -53,14 +53,10 @@ public class Recipe {
         return this;
     }
 
-    public Recipe updateIngredient(Ingredient ingredient){
-        ingredients.forEach(i -> {
-            if (i.getId().equals(ingredient.getId())){
-                i.setAmount(ingredient.getAmount());
-                i.setDescription(ingredient.getDescription());
-                i.setUom(ingredient.getUom());
-            }
-        });
+    public Recipe updateIngredient(Ingredient newIngredientValue) {
+        final Ingredient ingredient = ingredients.stream().filter(i -> i.getId().equals(newIngredientValue.getId())).findFirst().map(i -> i.updateValue(newIngredientValue)).orElse(newIngredientValue); if (ingredient.getId() == null) {
+            this.addIngredient(ingredient);
+        }
         return this;
     }
 }

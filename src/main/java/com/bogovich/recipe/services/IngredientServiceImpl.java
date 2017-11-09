@@ -23,10 +23,7 @@ public class IngredientServiceImpl implements IngredientService{
                 .findById(recipeId)
                 .orElseThrow(() -> new RuntimeException(String.format("No such Recipe id = %d", recipeId)))
                 .getIngredients()
-                .stream()
-                .filter(ing -> ing.getId().equals(ingredientId))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException(String.format("No such Ingidient id = %d for recipe id = %d", ingredientId, recipeId)));
+                .stream().filter(ing -> ing.getId().equals(ingredientId)).findFirst().orElseThrow(() -> new RuntimeException(String.format("No such Ingredient id = %d for recipe id = %d", ingredientId, recipeId)));
     }
 
     @Override
