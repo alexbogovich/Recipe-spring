@@ -91,7 +91,7 @@ public class IngredientServiceImplTest {
 
         assertTrue(recipe.getIngredients()
                          .stream()
-                         .anyMatch(i -> Ingredient.isEqual(i, ingredientUpdate)));
+                         .anyMatch(i -> Ingredient.isEqualByValue(i, ingredientUpdate)));
         assertEquals(2, recipe.getIngredients().size());
     }
 

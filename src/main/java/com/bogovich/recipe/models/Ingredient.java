@@ -44,7 +44,7 @@ public class Ingredient {
         return ingredient;
     }
 
-    public static Boolean isEqual(Ingredient i1, Ingredient i2) {
+    public static Boolean isEqualByValue(Ingredient i1, Ingredient i2) {
         return Objects.equals(i1.getId(), i2.getId()) &&
                Objects.equals(i1.getUom(), i2.getUom()) &&
                Objects.equals(i1.getAmount(), i2.getAmount()) &&
