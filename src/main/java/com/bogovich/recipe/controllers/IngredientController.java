@@ -38,12 +38,10 @@ public class IngredientController {
     public String showOneRecipeIngredient(@PathVariable String recipeId,
                                           @PathVariable String ingredientId,
                                           Model model) {
-        model.addAttribute("ingredient", ingredientService.
-                                                                  findByRecipeIdAndIngridientId
-                                                                          (Long.valueOf(
-                                                                          recipeId),
-                                                                                                Long.valueOf(
-                                                                                                        ingredientId)));
+        model.addAttribute("ingredient",
+                           ingredientService.findByRecipeIdAndIngridientId(Long.valueOf(recipeId),
+                                                                           Long.valueOf
+                                                                                   (ingredientId)));
         return "recipe/ingredient/show";
     }
 
@@ -79,5 +77,13 @@ public class IngredientController {
         } else {
             return "redirect:/recipe/" + recipeId + "/ingredients";
         }
+    }
+
+    @PostMapping
+    @RequestMapping("recipe/{recipeId}/ingredient/{ingredientId}/delete")
+    public String deleteIngredient(@PathVariable Long recipeId, @PathVariable Long ingredientId) {
+        log.debug("Delete ingredient " + ingredientId + " for recipe " + recipeId);
+        ingredientService.deleteIngredient(recipeId, ingredientId);
+        return String.format("redirect:/recipe/%d/ingredients", recipeId);
     }
 }

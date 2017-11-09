@@ -43,4 +43,17 @@ public class IngredientServiceImpl implements IngredientService {
         recipe.updateIngredient(ingredient);
         recipeRepository.save(recipe);
     }
+
+    @Override
+    public void deleteIngredient(Long rid, Ingredient ingredient) {
+        deleteIngredient(rid, ingredient.getId());
+    }
+
+    @Override
+    @Transactional
+    public void deleteIngredient(Long rid, Long iid) {
+        Ingredient ingredient = findByRecipeIdAndIngridientId(rid, iid);
+        ingredient.getRecipe().getIngredients().remove(ingredient);
+        ingredient.setRecipe(null);
+    }
 }

@@ -11,8 +11,7 @@ import org.mockito.MockitoAnnotations;
 import java.math.BigDecimal;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
@@ -99,6 +98,35 @@ public class IngredientServiceImplTest {
     public void saveIngredientRecipeNotExist() throws Exception {
         when(recipeRepository.findById(anyLong())).thenReturn(Optional.empty());
         ingredientService.saveIngredient(1L, new Ingredient());
+    }
+
+    @Test
+    public void deleteIngredient() throws Exception {
+        Recipe recipe = setUpRecipe(22L);
+        Ingredient ingredient1 = setUpIngredient(1L, recipe);
+        Ingredient ingredient2 = setUpIngredient(2L, recipe);
+
+        when(recipeRepository.findById(recipe.getId())).thenReturn(Optional.of(recipe));
+        ingredientService.deleteIngredient(recipe.getId(), ingredient1.getId());
+
+        assertFalse(recipe.getIngredients()
+                          .stream()
+                          .anyMatch(i -> Ingredient.isEqualByValue(i, ingredient1)));
+        assertEquals(1, recipe.getIngredients().size());
+        verify(recipeRepository, times(1)).findById(recipe.getId());
+
+        ingredientService.deleteIngredient(recipe.getId(), ingredient2.getId());
+        assertFalse(recipe.getIngredients()
+                          .stream()
+                          .anyMatch(i -> Ingredient.isEqualByValue(i, ingredient2)));
+        assertEquals(0, recipe.getIngredients().size());
+        verify(recipeRepository, times(2)).findById(recipe.getId());
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void deleteIngredientException() throws Exception {
+        when(recipeRepository.findById(anyLong())).thenReturn(Optional.empty());
+        ingredientService.deleteIngredient(1L, 2L);
     }
 
     private Recipe setUpRecipe(Long id) {

@@ -41,19 +41,19 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
         List<Recipe> recipeList = new ArrayList<>();
         //get optionals
         UnitOfMeasure eachUom = unitOfMeasureRepository.findByDescription("Each").orElseThrow(null);
-        UnitOfMeasure tableSpoonUom = unitOfMeasureRepository.findByDescription("Tablespoon")
-                                                             .orElseThrow(null);
-        UnitOfMeasure teapoonUom = unitOfMeasureRepository.findByDescription("Teaspoon")
-                                                          .orElseThrow(null);
+        UnitOfMeasure tableSpoonUom =
+                unitOfMeasureRepository.findByDescription("Tablespoon").orElseThrow(null);
+        UnitOfMeasure teapoonUom =
+                unitOfMeasureRepository.findByDescription("Teaspoon").orElseThrow(null);
         UnitOfMeasure dashUom = unitOfMeasureRepository.findByDescription("Dash").orElseThrow(null);
         UnitOfMeasure pintUom = unitOfMeasureRepository.findByDescription("Pint").orElseThrow(null);
         UnitOfMeasure cupsUom = unitOfMeasureRepository.findByDescription("Cup").orElseThrow(null);
 
         //get categorise
-        Category americanCategory = categoryRepository.findByDescription("American").orElseThrow(
-                null);
-        Category mexicanCategory = categoryRepository.findByDescription("Mexican")
-                                                     .orElseThrow(null);
+        Category americanCategory =
+                categoryRepository.findByDescription("American").orElseThrow(null);
+        Category mexicanCategory =
+                categoryRepository.findByDescription("Mexican").orElseThrow(null);
 
         Recipe guacRecipe = new Recipe();
         guacRecipe.setDescription("Perfect Guacamole");
