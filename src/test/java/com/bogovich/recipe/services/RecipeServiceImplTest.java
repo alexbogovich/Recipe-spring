@@ -35,13 +35,16 @@ public class RecipeServiceImplTest {
 
         List<Recipe> recipes = recipeService.getAllRecipes();
 
-        assertEquals(1, recipes.size()); assertEquals(receiptData, recipes);
+        assertEquals(1, recipes.size());
+        assertEquals(receiptData, recipes);
         verify(recipeRepository, times(1)).findAll();
     }
 
     @Test
     public void deleteById() throws Exception {
-        Long id = new Random().nextLong(); recipeService.deleteById(id); verify(recipeRepository, times(1)).deleteById(id);
+        Long id = new Random().nextLong();
+        recipeService.deleteById(id);
+        verify(recipeRepository, times(1)).deleteById(id);
     }
 
 }

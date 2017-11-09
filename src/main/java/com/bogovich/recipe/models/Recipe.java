@@ -38,8 +38,8 @@ public class Recipe {
 
     @ManyToMany
     @JoinTable(name = "recipe_category",
-            joinColumns = @JoinColumn(name = "recipe_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id"))
+               joinColumns = @JoinColumn(name = "recipe_id"),
+               inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories = new HashSet<>();
 
     public void setNotes(Notes notes) {
@@ -54,7 +54,13 @@ public class Recipe {
     }
 
     public Recipe updateIngredient(Ingredient newIngredientValue) {
-        final Ingredient ingredient = ingredients.stream().filter(i -> i.getId().equals(newIngredientValue.getId())).findFirst().map(i -> i.updateValue(newIngredientValue)).orElse(newIngredientValue); if (ingredient.getId() == null) {
+        final Ingredient ingredient = ingredients.stream()
+                                                 .filter(i -> i.getId()
+                                                               .equals(newIngredientValue.getId()))
+                                                 .findFirst()
+                                                 .map(i -> i.updateValue(newIngredientValue))
+                                                 .orElse(newIngredientValue);
+        if (ingredient.getId() == null) {
             this.addIngredient(ingredient);
         }
         return this;

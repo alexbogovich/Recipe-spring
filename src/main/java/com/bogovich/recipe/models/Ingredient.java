@@ -39,19 +39,29 @@ public class Ingredient {
     }
 
     public static Ingredient of(Recipe recipe) {
-        final Ingredient ingredient = new Ingredient(recipe); ingredient.setUom(new UnitOfMeasure()); return ingredient;
-    }
-
-    public Ingredient updateValue(Ingredient ingredient) {
-        return this.updateValue(ingredient.getDescription(), ingredient.getAmount(), ingredient.getUom());
-    }
-
-    public Ingredient updateValue(String description, BigDecimal amount, UnitOfMeasure uom) {
-        this.description = description; this.amount = amount; this.uom = uom; return this;
+        final Ingredient ingredient = new Ingredient(recipe);
+        ingredient.setUom(new UnitOfMeasure());
+        return ingredient;
     }
 
     public static Boolean isEqual(Ingredient i1, Ingredient i2) {
-        return Objects.equals(i1.getId(), i2.getId()) && Objects.equals(i1.getUom(), i2.getUom()) && Objects.equals(i1.getAmount(), i2.getAmount()) && Objects.equals(i1.getDescription(), i2.getDescription());
+        return Objects.equals(i1.getId(), i2.getId()) &&
+               Objects.equals(i1.getUom(), i2.getUom()) &&
+               Objects.equals(i1.getAmount(), i2.getAmount()) &&
+               Objects.equals(i1.getDescription(), i2.getDescription());
 
+    }
+
+    public Ingredient updateValue(Ingredient ingredient) {
+        return this.updateValue(ingredient.getDescription(),
+                                ingredient.getAmount(),
+                                ingredient.getUom());
+    }
+
+    public Ingredient updateValue(String description, BigDecimal amount, UnitOfMeasure uom) {
+        this.description = description;
+        this.amount = amount;
+        this.uom = uom;
+        return this;
     }
 }

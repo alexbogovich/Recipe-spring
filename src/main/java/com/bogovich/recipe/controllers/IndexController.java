@@ -22,8 +22,6 @@ public class IndexController {
     public String getIndexPage(Model model) {
         log.debug("Call index");
         model.addAttribute("recipeList", recipeService.getAllRecipes());
-//        System.out.println(recipeService.getAllRecipes().get(0).getIngredients());
-        //System.out.println(recipeService.getAllRecipes());
         log.debug("Return index");
         return "index";
     }

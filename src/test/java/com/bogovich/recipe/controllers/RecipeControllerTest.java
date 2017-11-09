@@ -42,17 +42,15 @@ public class RecipeControllerTest {
         when(recipeService.findById(id)).thenReturn(recipe);
 
         mockMvc.perform(get(String.format("/recipe/%d/show", id)))
-                .andExpect(status().isOk())
-                .andExpect(view().name("recipe/show"))
-                .andExpect(model().attributeExists("recipe"));
+               .andExpect(status().isOk())
+               .andExpect(view().name("recipe/show"))
+               .andExpect(model().attributeExists("recipe"));
     }
 
     @Test
     public void getNewRecipe() throws Exception {
-        mockMvc.perform(get("/recipe/new"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("recipe/recipeform"))
-                .andExpect(model().attributeExists("recipe"));
+        mockMvc.perform(get("/recipe/new")).andExpect(status().isOk()).andExpect(view().name(
+                "recipe/recipeform")).andExpect(model().attributeExists("recipe"));
     }
 
     @Test
@@ -63,13 +61,11 @@ public class RecipeControllerTest {
 
         when(recipeService.saveRecipe(any())).thenReturn(recipe);
 
-        mockMvc.perform(post("/recipe")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("id", "")
-                .param("description", "some string")
-        )
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name(String.format("redirect:/recipe/%d/show", id)));
+        mockMvc.perform(post("/recipe").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                                       .param("id", "")
+                                       .param("description", "some string"))
+               .andExpect(status().is3xxRedirection())
+               .andExpect(view().name(String.format("redirect:/recipe/%d/show", id)));
     }
 
     @Test
@@ -81,14 +77,18 @@ public class RecipeControllerTest {
         when(recipeService.findById(id)).thenReturn(recipe);
 
         mockMvc.perform(get(String.format("/recipe/%d/update", id)))
-                .andExpect(status().isOk())
-                .andExpect(view().name("recipe/recipeform"))
-                .andExpect(model().attributeExists("recipe"));
+               .andExpect(status().isOk())
+               .andExpect(view().name("recipe/recipeform"))
+               .andExpect(model().attributeExists("recipe"));
     }
 
 
     @Test
     public void deleteById() throws Exception {
-        Long id = new Random().nextLong(); mockMvc.perform(get(String.format("/recipe/%d/delete", id))).andExpect(status().is3xxRedirection()).andExpect(view().name("redirect:/")); verify(recipeService, times(1)).deleteById(id);
+        Long id = new Random().nextLong();
+        mockMvc.perform(get(String.format("/recipe/%d/delete", id)))
+               .andExpect(status().is3xxRedirection())
+               .andExpect(view().name("redirect:/"));
+        verify(recipeService, times(1)).deleteById(id);
     }
 }

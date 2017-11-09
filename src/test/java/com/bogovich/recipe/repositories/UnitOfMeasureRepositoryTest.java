@@ -20,13 +20,14 @@ public class UnitOfMeasureRepositoryTest {
 
     @Test
     public void findByDescriptionTablespoon() throws Exception {
-        Optional<UnitOfMeasure> unitOfMeasureOptional =
-                unitOfMeasureRepository.findByDescription("Tablespoon");
+        Optional<UnitOfMeasure> unitOfMeasureOptional = unitOfMeasureRepository.findByDescription(
+                "Tablespoon");
         assertEquals("Tablespoon", unitOfMeasureOptional.get().getDescription());
     }
 
     @Test(expected = Exception.class)
     public void findByDescriptionException() throws Exception {
-        unitOfMeasureRepository.findByDescription("ThisWillFail...MayBe").orElseThrow(() -> new Exception());
+        unitOfMeasureRepository.findByDescription("ThisWillFail...MayBe")
+                               .orElseThrow(() -> new Exception());
     }
 }

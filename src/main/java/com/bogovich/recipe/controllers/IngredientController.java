@@ -18,7 +18,9 @@ public class IngredientController {
     private final IngredientService ingredientService;
     private final UnitOfMeasureService unitOfMeasureService;
 
-    public IngredientController(RecipeService recipeService, IngredientService ingredientService, UnitOfMeasureService unitOfMeasureService) {
+    public IngredientController(RecipeService recipeService,
+                                IngredientService ingredientService,
+                                UnitOfMeasureService unitOfMeasureService) {
         this.recipeService = recipeService;
         this.ingredientService = ingredientService;
         this.unitOfMeasureService = unitOfMeasureService;
@@ -33,16 +35,27 @@ public class IngredientController {
     }
 
     @RequestMapping("/recipe/{recipeId}/ingredient/{ingredientId}/show")
-    public String showOneRecipeIngredient(@PathVariable String recipeId, @PathVariable String ingredientId, Model model) {
+    public String showOneRecipeIngredient(@PathVariable String recipeId,
+                                          @PathVariable String ingredientId,
+                                          Model model) {
         model.addAttribute("ingredient", ingredientService.
-                findByRecipeIdAndIngridientId(Long.valueOf(recipeId), Long.valueOf(ingredientId)));
+                                                                  findByRecipeIdAndIngridientId
+                                                                          (Long.valueOf(
+                                                                          recipeId),
+                                                                                                Long.valueOf(
+                                                                                                        ingredientId)));
         return "recipe/ingredient/show";
     }
 
     @GetMapping
     @RequestMapping("recipe/{recipeId}/ingredient/{ingredientId}/update")
-    public String updateRecipeIngredient(@PathVariable String recipeId, @PathVariable String ingredientId, Model model){
-        model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngridientId(Long.valueOf(recipeId), Long.valueOf(ingredientId)));
+    public String updateRecipeIngredient(@PathVariable String recipeId,
+                                         @PathVariable String ingredientId,
+                                         Model model) {
+        model.addAttribute("ingredient",
+                           ingredientService.findByRecipeIdAndIngridientId(Long.valueOf(recipeId),
+                                                                           Long.valueOf
+                                                                                   (ingredientId)));
         model.addAttribute("uomList", unitOfMeasureService.listAllUoms());
         return "recipe/ingredient/ingredientform";
     }
@@ -50,13 +63,18 @@ public class IngredientController {
     @GetMapping
     @RequestMapping("recipe/{recipeId}/ingredient/new")
     public String newIngredient(@PathVariable Long recipeId, Model model) {
-        model.addAttribute("ingredient", Ingredient.of(recipeService.findById(recipeId))); model.addAttribute("uomList", unitOfMeasureService.listAllUoms()); return "recipe/ingredient/ingredientform";
+        model.addAttribute("ingredient", Ingredient.of(recipeService.findById(recipeId)));
+        model.addAttribute("uomList", unitOfMeasureService.listAllUoms());
+        return "recipe/ingredient/ingredientform";
     }
 
     @PostMapping
     @RequestMapping("recipe/{recipeId}/ingredient")
-    public String saveOrUpdate(@PathVariable String recipeId, @ModelAttribute Ingredient ingredient){
-        log.info(ingredient.toString()); ingredientService.saveIngredient(Long.valueOf(recipeId), ingredient); if (ingredient.getId() != null) {
+    public String saveOrUpdate(@PathVariable String recipeId,
+                               @ModelAttribute Ingredient ingredient) {
+        log.info(ingredient.toString());
+        ingredientService.saveIngredient(Long.valueOf(recipeId), ingredient);
+        if (ingredient.getId() != null) {
             return "redirect:/recipe/" + recipeId + "/ingredient/" + ingredient.getId() + "/show";
         } else {
             return "redirect:/recipe/" + recipeId + "/ingredients";

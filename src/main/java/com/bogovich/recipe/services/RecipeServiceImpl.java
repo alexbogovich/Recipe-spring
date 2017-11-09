@@ -27,13 +27,16 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public Recipe findById(Long l) {
         log.debug(String.format("Get recipe by id %d", l));
-        return recipeRepository.findById(l).orElseThrow(() -> new RuntimeException("No such recipe id"));
+        return recipeRepository.findById(l).orElseThrow(() -> new RuntimeException(
+                "No such recipe id"));
     }
 
     @Override
     @Transactional
     public Recipe saveRecipe(Recipe recipe) {
-        log.debug(String.format("Save recipe id:%d desc:%s", recipe.getId(), recipe.getDescription()));
+        log.debug(String.format("Save recipe id:%d desc:%s",
+                                recipe.getId(),
+                                recipe.getDescription()));
         return recipeRepository.save(recipe);
     }
 

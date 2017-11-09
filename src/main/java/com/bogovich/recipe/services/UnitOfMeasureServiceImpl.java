@@ -9,7 +9,7 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class UnitOfMeasureServiceImpl implements  UnitOfMeasureService{
+public class UnitOfMeasureServiceImpl implements UnitOfMeasureService {
 
     UnitOfMeasureRepository unitOfMeasureRepository;
 
