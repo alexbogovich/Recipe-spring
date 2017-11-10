@@ -1,5 +1,6 @@
 package com.bogovich.recipe.controllers;
 
+import com.bogovich.recipe.exceptions.NotFoundException;
 import com.bogovich.recipe.models.Ingredient;
 import com.bogovich.recipe.models.Recipe;
 import com.bogovich.recipe.services.IngredientService;
@@ -15,6 +16,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.ArrayList;
 import java.util.Random;
 
+import static com.bogovich.recipe.controllers.ExceptionTest.testGet;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -42,7 +44,9 @@ public class IngredientControllerTest {
         controller = new IngredientController(recipeService,
                                               ingredientService,
                                               unitOfMeasureService);
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(controller)
+                .setControllerAdvice(new ExceptionHandlerController())
+                .build();
     }
 
     @Test
@@ -59,6 +63,17 @@ public class IngredientControllerTest {
                .andExpect(model().attributeExists("recipe"));
 
         verify(recipeService, times(1)).findById(recipe.getId());
+    }
+
+    @Test
+    public void listIngredientsNotFound() throws Exception {
+        when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
+        testGet(mockMvc,"/recipe/1/ingredients", status().isNotFound());
+    }
+
+    @Test
+    public void listIngredientsNumberException() throws Exception {
+        testGet(mockMvc,"/recipe/abc/ingredients", status().isBadRequest());
     }
 
     @Test
@@ -82,6 +97,28 @@ public class IngredientControllerTest {
 
         verify(ingredientService, times(1)).findByRecipeIdAndIngridientId(recipe.getId(),
                                                                           ingredient.getId());
+    }
+
+    @Test
+    public void showOneRecipeIngredientRecipeNotFound() throws Exception {
+        when(ingredientService.findByRecipeIdAndIngridientId(anyLong(), anyLong())).thenThrow(NotFoundException.class);
+        testGet(mockMvc,"/recipe/1/ingredient/1/show", status().isNotFound());
+    }
+
+    @Test
+    public void showOneRecipeIngredientRecipeNumberFormat() throws Exception {
+        testGet(mockMvc,"/recipe/a/ingredient/1/show", status().isBadRequest());
+    }
+
+    @Test
+    public void showOneRecipeIngredientIngredientNotFound() throws Exception {
+        when(ingredientService.findByRecipeIdAndIngridientId(anyLong(), anyLong())).thenThrow(NotFoundException.class);
+        testGet(mockMvc,"/recipe/1/ingredient/1/show", status().isNotFound());
+    }
+
+    @Test
+    public void showOneRecipeIngredientIngredientNumberFormat() throws Exception {
+        testGet(mockMvc,"/recipe/1/ingredient/a/show", status().isBadRequest());
     }
 
     @Test

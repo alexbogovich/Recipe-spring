@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Random;
 
+import static com.bogovich.recipe.controllers.ExceptionTest.testGet;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -31,7 +32,9 @@ public class RecipeControllerTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         recipeController = new RecipeController(recipeService);
-        mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(recipeController)
+                .setControllerAdvice(new ExceptionHandlerController())
+                .build();
     }
 
     @Test
@@ -51,18 +54,12 @@ public class RecipeControllerTest {
     @Test
     public void showByIdNotFound() throws Exception {
         when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
-        mockMvc.perform(get("/recipe/1/show"))
-                .andExpect(status().isNotFound())
-                .andExpect(view().name("errorPage"))
-                .andExpect(model().attributeExists("exception", "errorCode", "errorTitle"));
+        testGet(mockMvc,"/recipe/1/show", status().isNotFound());
     }
 
     @Test
     public void showByIdNumberFormat() throws Exception {
-        mockMvc.perform(get("/recipe/abc/show"))
-                .andExpect(status().isBadRequest())
-                .andExpect(view().name("errorPage"))
-                .andExpect(model().attributeExists("exception", "errorCode", "errorTitle"));
+        testGet(mockMvc,"/recipe/a/show", status().isBadRequest());
     }
 
     @Test

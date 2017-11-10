@@ -1,5 +1,6 @@
 package com.bogovich.recipe.services;
 
+import com.bogovich.recipe.exceptions.NotFoundException;
 import com.bogovich.recipe.models.Ingredient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class IngredientServiceImpl implements IngredientService {
                             .stream()
                             .filter(ing -> ing.getId().equals(ingredientId))
                             .findFirst()
-                            .orElseThrow(() -> new RuntimeException(String.format(
+                            .orElseThrow(() -> new NotFoundException(String.format(
                                     "No such Ingredient id = %d for recipe id = %d",
                                     ingredientId,
                                     recipeId)));
