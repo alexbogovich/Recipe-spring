@@ -1,5 +1,6 @@
 package com.bogovich.recipe.services;
 
+import com.bogovich.recipe.exceptions.NotFoundException;
 import com.bogovich.recipe.models.Recipe;
 import com.bogovich.recipe.repositories.RecipeRepository;
 import org.junit.Before;
@@ -9,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
@@ -45,6 +47,13 @@ public class RecipeServiceImplTest {
         Long id = new Random().nextLong();
         recipeService.deleteById(id);
         verify(recipeRepository, times(1)).deleteById(id);
+    }
+
+
+    @Test(expected = NotFoundException.class)
+    public void findByIdException() throws Exception {
+        when(recipeRepository.findById(anyLong())).thenReturn(Optional.empty());
+        recipeService.findById(1L);
     }
 
 }

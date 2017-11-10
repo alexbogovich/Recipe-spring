@@ -1,5 +1,6 @@
 package com.bogovich.recipe.controllers;
 
+import com.bogovich.recipe.exceptions.NotFoundException;
 import com.bogovich.recipe.models.Recipe;
 import com.bogovich.recipe.services.RecipeService;
 import org.junit.Before;
@@ -45,6 +46,14 @@ public class RecipeControllerTest {
                .andExpect(status().isOk())
                .andExpect(view().name("recipe/show"))
                .andExpect(model().attributeExists("recipe"));
+    }
+
+    @Test
+    public void showByIdNotFound() throws Exception {
+        when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
+        mockMvc.perform(get("/recipe/1/show"))
+                .andExpect(status().isNotFound())
+                .andExpect(view().name("404error"));
     }
 
     @Test
