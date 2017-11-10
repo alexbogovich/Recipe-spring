@@ -27,31 +27,27 @@ public class IngredientController {
     }
 
     @GetMapping("/recipe/{recipeId}/ingredients")
-    public String listIngredients(@PathVariable String recipeId, Model model) {
+    public String listIngredients(@PathVariable Long recipeId, Model model) {
         log.debug("Getting ingredient list for recipe id: " + recipeId);
-        model.addAttribute("recipe", recipeService.findById(Long.valueOf(recipeId)));
+        model.addAttribute("recipe", recipeService.findById(recipeId));
         return "recipe/ingredient/list";
     }
 
     @GetMapping("/recipe/{recipeId}/ingredient/{ingredientId}/show")
-    public String showOneRecipeIngredient(@PathVariable String recipeId,
-                                          @PathVariable String ingredientId,
+    public String showOneRecipeIngredient(@PathVariable Long recipeId,
+                                          @PathVariable Long ingredientId,
                                           Model model) {
         model.addAttribute("ingredient",
-                           ingredientService.findByRecipeIdAndIngridientId(Long.valueOf(recipeId),
-                                                                           Long.valueOf
-                                                                                   (ingredientId)));
+                           ingredientService.findByRecipeIdAndIngridientId(recipeId, ingredientId));
         return "recipe/ingredient/show";
     }
 
     @GetMapping("recipe/{recipeId}/ingredient/{ingredientId}/update")
-    public String updateRecipeIngredient(@PathVariable String recipeId,
-                                         @PathVariable String ingredientId,
+    public String updateRecipeIngredient(@PathVariable Long recipeId,
+                                         @PathVariable Long ingredientId,
                                          Model model) {
         model.addAttribute("ingredient",
-                           ingredientService.findByRecipeIdAndIngridientId(Long.valueOf(recipeId),
-                                                                           Long.valueOf
-                                                                                   (ingredientId)));
+                           ingredientService.findByRecipeIdAndIngridientId(recipeId, ingredientId));
         model.addAttribute("uomList", unitOfMeasureService.listAllUoms());
         return "recipe/ingredient/ingredientform";
     }
@@ -64,10 +60,10 @@ public class IngredientController {
     }
 
     @PostMapping("recipe/{recipeId}/ingredient")
-    public String saveOrUpdate(@PathVariable String recipeId,
+    public String saveOrUpdate(@PathVariable Long recipeId,
                                @ModelAttribute Ingredient ingredient) {
         log.info(ingredient.toString());
-        ingredientService.saveIngredient(Long.valueOf(recipeId), ingredient);
+        ingredientService.saveIngredient(recipeId, ingredient);
         if (ingredient.getId() != null) {
             return "redirect:/recipe/" + recipeId + "/ingredient/" + ingredient.getId() + "/show";
         } else {
