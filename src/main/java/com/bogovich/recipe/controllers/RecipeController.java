@@ -20,9 +20,9 @@ public class RecipeController {
     }
 
     @GetMapping("/recipe/{id}/show")
-    public String showById(@PathVariable String id, Model model) {
+    public String showById(@PathVariable Long id, Model model) {
         log.debug(String.format("Get request for %s id recipe", id));
-        model.addAttribute("recipe", recipeService.findById(new Long(id)));
+        model.addAttribute("recipe", recipeService.findById(id));
         return "recipe/show";
     }
 
@@ -34,9 +34,9 @@ public class RecipeController {
     }
 
     @GetMapping("recipe/{id}/update")
-    public String updateRecipe(@PathVariable String id, Model model) {
+    public String updateRecipe(@PathVariable Long id, Model model) {
         log.debug(String.format("Get request for %s id recipe", id));
-        model.addAttribute("recipe", recipeService.findById(Long.valueOf(id)));
+        model.addAttribute("recipe", recipeService.findById(id));
         return "recipe/recipeform";
     }
 
@@ -51,9 +51,9 @@ public class RecipeController {
     }
 
     @GetMapping("recipe/{id}/delete")
-    public String deleteById(@PathVariable String id) {
+    public String deleteById(@PathVariable Long id) {
         log.debug("Deleting id: " + id);
-        recipeService.deleteById(Long.valueOf(id));
+        recipeService.deleteById(id);
         return "redirect:/";
     }
 
@@ -61,6 +61,19 @@ public class RecipeController {
     @ExceptionHandler(NotFoundException.class)
     public ModelAndView handleNotFound(Exception ex){
         log.error(ex.getMessage());
-        return new ModelAndView("404error").addObject("exception", ex);
+        return new ModelAndView("errorPage")
+                .addObject("exception", ex)
+                .addObject("errorCode", 404)
+                .addObject("errorTitle", "404 NOT FOUND");
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NumberFormatException.class)
+    public ModelAndView handleNumberFormat(Exception ex){
+        log.error(ex.getMessage());
+        return new ModelAndView("errorPage")
+                .addObject("exception", ex)
+                .addObject("errorCode", 400)
+                .addObject("errorTitle", "400 BAD FORMAT");
     }
 }
