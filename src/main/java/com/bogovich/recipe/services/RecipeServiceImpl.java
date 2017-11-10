@@ -29,7 +29,7 @@ public class RecipeServiceImpl implements RecipeService {
     public Recipe findById(Long l) {
         log.debug(String.format("Get recipe by id %d", l));
         return recipeRepository.findById(l)
-                               .orElseThrow(() -> new NotFoundException("No such recipe id"));
+                               .orElseThrow(() -> new NotFoundException("Recipe not found. For id = " + l));
     }
 
     @Override
