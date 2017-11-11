@@ -2,8 +2,11 @@ package com.bogovich.recipe.models;
 
 import lombok.Data;
 import lombok.ToString;
+import org.hibernate.validator.constraints.URL;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,13 +18,19 @@ public class Recipe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank
     private String description;
+    @Min(0)
     private Integer prepTime;
+    @Min(0)
     private Integer cookTime;
+    @Min(0)
     private String servings;
     private String source;
+    @URL
     private String url;
     @Lob
+    @NotBlank
     private String directions;
 
     @Enumerated(value = EnumType.STRING)

@@ -78,10 +78,70 @@ public class RecipeControllerTest {
 
         mockMvc.perform(post("/recipe").contentType(MediaType.APPLICATION_FORM_URLENCODED)
                                        .param("id", "")
-                                       .param("description", "some string"))
+                                       .param("description", "some string")
+                                       .param("directions", "dirs"))
                .andExpect(status().is3xxRedirection())
                .andExpect(view().name(String.format("redirect:/recipe/%d/show", id)));
     }
+
+    @Test
+    public void postNewRecipeValidationBlankDirections() throws Exception {
+        mockMvc.perform(post("/recipe").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id", "")
+                .param("description", "some string"))
+                .andExpect(view().name("recipe/recipeform"));
+    }
+
+    @Test
+    public void postNewRecipeValidationBlankDescription() throws Exception {
+        mockMvc.perform(post("/recipe").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id", "")
+                .param("directions", "132"))
+                .andExpect(view().name("recipe/recipeform"));
+    }
+
+    @Test
+    public void postNewRecipeValidationEmptyDirectionsAndDirections() throws Exception {
+        mockMvc.perform(post("/recipe").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id", "")
+                .param("directions", "")
+                .param("description", ""))
+                .andExpect(view().name("recipe/recipeform"));
+    }
+
+    @Test
+    public void postNewRecipeValidationMinusPrepTime() throws Exception {
+        mockMvc.perform(post("/recipe").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id", "")
+                .param("directions", "valid")
+                .param("description", "valid")
+                .param("prepTime", "-1")
+        )
+                .andExpect(view().name("recipe/recipeform"));
+    }
+
+    @Test
+    public void postNewRecipeValidationMinusCookTime() throws Exception {
+        mockMvc.perform(post("/recipe").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id", "")
+                .param("directions", "valid")
+                .param("description", "valid")
+                .param("cookTime", "-1")
+        )
+                .andExpect(view().name("recipe/recipeform"));
+    }
+
+    @Test
+    public void postNewRecipeValidationBadUrl() throws Exception {
+        mockMvc.perform(post("/recipe").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id", "")
+                .param("directions", "valid")
+                .param("description", "valid")
+                .param("url", "123")
+        )
+                .andExpect(view().name("recipe/recipeform"));
+    }
+
 
     @Test
     public void saveOrUpdate() throws Exception {
