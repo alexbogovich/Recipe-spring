@@ -1,23 +1,24 @@
 package com.bogovich.recipe.models;
 
-import lombok.Data;
-import lombok.ToString;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.URL;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
-@ToString(of = {"id", "description"})
-@Entity
+@Getter
+@Setter
+@Document
 public class Recipe {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     @NotBlank
     private String description;
     @Min(0)
@@ -29,36 +30,17 @@ public class Recipe {
     private String source;
     @URL
     private String url;
-    @Lob
     @NotBlank
     private String directions;
-
-    @Enumerated(value = EnumType.STRING)
     private Difficulty difficulty;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
     private Set<Ingredient> ingredients = new HashSet<>();
-
-    @Lob
     private Byte[] image;
-
-    @OneToOne(cascade = CascadeType.ALL)
     private Notes notes;
-
-    @ManyToMany
-    @JoinTable(name = "recipe_category",
-               joinColumns = @JoinColumn(name = "recipe_id"),
-               inverseJoinColumns = @JoinColumn(name = "category_id"))
+    @DBRef
     private Set<Category> categories = new HashSet<>();
-
-    public void setNotes(Notes notes) {
-        this.notes = notes;
-        notes.setRecipe(this);
-    }
 
     public Recipe addIngredient(Ingredient ingredient) {
         this.ingredients.add(ingredient);
-        ingredient.setRecipe(this);
         return this;
     }
 

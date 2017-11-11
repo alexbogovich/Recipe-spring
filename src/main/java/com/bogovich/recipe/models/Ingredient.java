@@ -1,47 +1,29 @@
 package com.bogovich.recipe.models;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Objects;
+import java.util.UUID;
 
-@Data
-@EqualsAndHashCode(exclude = "recipe")
-@ToString(of = {"id", "description"})
-@Entity
+@Setter
+@Getter
+@NoArgsConstructor
 public class Ingredient {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id = UUID.randomUUID().toString();
     private String description;
     private BigDecimal amount;
 
-    @ManyToOne
-    private Recipe recipe;
-
-    @OneToOne
+    @DBRef
     private UnitOfMeasure uom;
 
     public Ingredient(String description, BigDecimal amount, UnitOfMeasure uom) {
         this.description = description;
         this.amount = amount;
         this.uom = uom;
-    }
-
-    public Ingredient() {
-    }
-
-    private Ingredient(Recipe recipe) {
-        this.recipe = recipe;
-    }
-
-    public static Ingredient of(Recipe recipe) {
-        final Ingredient ingredient = new Ingredient(recipe);
-        ingredient.setUom(new UnitOfMeasure());
-        return ingredient;
     }
 
     public static Boolean isEqualByValue(Ingredient i1, Ingredient i2) {

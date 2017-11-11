@@ -16,34 +16,32 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public Ingredient findByRecipeIdAndIngridientId(Long recipeId, Long ingredientId) {
+    public Ingredient findByRecipeIdAndIngridientId(String recipeId, String ingredientId) {
         return recipeService.findById(recipeId)
                             .getIngredients()
                             .stream()
                             .filter(ing -> ing.getId().equals(ingredientId))
                             .findFirst()
                             .orElseThrow(() -> new NotFoundException(String.format(
-                                    "No such Ingredient id = %d for recipe id = %d",
+                                    "No such Ingredient id = %s for recipe id = %s",
                                     ingredientId,
                                     recipeId)));
     }
 
     @Override
-    @Transactional
-    public void saveIngredient(Long rid, Ingredient ingredient) {
-        recipeService.findById(rid).updateIngredient(ingredient);
+    public void saveIngredient(String rid, Ingredient ingredient) {
+        recipeService.saveRecipe(recipeService.findById(rid).updateIngredient(ingredient));
     }
 
     @Override
-    public void deleteIngredient(Long rid, Ingredient ingredient) {
+    public void deleteIngredient(String rid, Ingredient ingredient) {
         deleteIngredient(rid, ingredient.getId());
     }
 
     @Override
-    @Transactional
-    public void deleteIngredient(Long rid, Long iid) {
-        Ingredient ingredient = findByRecipeIdAndIngridientId(rid, iid);
-        ingredient.getRecipe().getIngredients().remove(ingredient);
-        ingredient.setRecipe(null);
+    public void deleteIngredient(String rid, String iid) {
+//        Ingredient ingredient = findByRecipeIdAndIngridientId(rid, iid);
+//        ingredient.getRecipe().getIngredients().remove(ingredient);
+//        ingredient.setRecipe(null);
     }
 }
