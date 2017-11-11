@@ -1,6 +1,7 @@
 package com.bogovich.recipe.repositories;
 
 import com.bogovich.recipe.models.UnitOfMeasure;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ public class UnitOfMeasureRepositoryTest {
     UnitOfMeasureRepository unitOfMeasureRepository;
 
     @Test
+    @Ignore
     public void findByDescriptionTablespoon() throws Exception {
         Optional<UnitOfMeasure> unitOfMeasureOptional = unitOfMeasureRepository.findByDescription(
                 "Tablespoon");
@@ -26,6 +28,7 @@ public class UnitOfMeasureRepositoryTest {
     }
 
     @Test(expected = Exception.class)
+    @Ignore
     public void findByDescriptionException() throws Exception {
         unitOfMeasureRepository.findByDescription("ThisWillFail...MayBe")
                                .orElseThrow(() -> new Exception());

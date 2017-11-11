@@ -45,14 +45,11 @@ public class Recipe {
     }
 
     public Recipe updateIngredient(Ingredient newIngredientValue) {
-        final Ingredient ingredient = ingredients.stream()
-                                                 .filter(i -> i.getId()
-                                                               .equals(newIngredientValue.getId()))
+        if (!ingredients.stream().filter(i -> i.getId().equals(newIngredientValue.getId()))
                                                  .findFirst()
                                                  .map(i -> i.updateValue(newIngredientValue))
-                                                 .orElse(newIngredientValue);
-        if (ingredient.getId() == null) {
-            this.addIngredient(ingredient);
+                                                 .isPresent()){
+            this.addIngredient(newIngredientValue);
         }
         return this;
     }

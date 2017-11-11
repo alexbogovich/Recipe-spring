@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import static com.bogovich.recipe.controllers.ExceptionTest.testGet;
+import static java.util.UUID.randomUUID;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -51,13 +52,13 @@ public class IngredientControllerTest {
 
     @Test
     public void listIngredients() throws Exception {
-        Long id = new Random().nextLong();
+        String id = randomUUID().toString();
         Recipe recipe = new Recipe();
         recipe.setId(id);
 
         when(recipeService.findById(id)).thenReturn(recipe);
 
-        mockMvc.perform(get(String.format("/recipe/%d/ingredients", id)))
+        mockMvc.perform(get(String.format("/recipe/%s/ingredients", id)))
                .andExpect(status().isOk())
                .andExpect(view().name("recipe/ingredient/list"))
                .andExpect(model().attributeExists("recipe"));
@@ -67,28 +68,27 @@ public class IngredientControllerTest {
 
     @Test
     public void listIngredientsNotFound() throws Exception {
-        when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
+        when(recipeService.findById(anyString())).thenThrow(NotFoundException.class);
         testGet(mockMvc,"/recipe/1/ingredients", status().isNotFound());
     }
 
-    @Test
-    public void listIngredientsNumberException() throws Exception {
-        testGet(mockMvc,"/recipe/abc/ingredients", status().isBadRequest());
-    }
+//    @Test
+//    public void listIngredientsNumberException() throws Exception {
+//        testGet(mockMvc,"/recipe/abc/ingredients", status().isBadRequest());
+//    }
 
     @Test
     public void showOneRecipeIngredient() throws Exception {
         Recipe recipe = new Recipe();
         Ingredient ingredient = new Ingredient();
-        recipe.setId(new Random().nextLong());
-        ingredient.setId(new Random().nextLong());
+        recipe.setId(randomUUID().toString());
         recipe.getIngredients().add(ingredient);
 
         when(ingredientService.findByRecipeIdAndIngridientId(recipe.getId(),
                                                              ingredient.getId())).thenReturn(
                 ingredient);
 
-        mockMvc.perform(get(String.format("/recipe/%d/ingredient/%d/show",
+        mockMvc.perform(get(String.format("/recipe/%s/ingredient/%s/show",
                                           recipe.getId(),
                                           ingredient.getId())))
                .andExpect(status().isOk())
@@ -101,32 +101,32 @@ public class IngredientControllerTest {
 
     @Test
     public void showOneRecipeIngredientRecipeNotFound() throws Exception {
-        when(ingredientService.findByRecipeIdAndIngridientId(anyLong(), anyLong())).thenThrow(NotFoundException.class);
+        when(ingredientService.findByRecipeIdAndIngridientId(anyString(), anyString())).thenThrow(NotFoundException.class);
         testGet(mockMvc,"/recipe/1/ingredient/1/show", status().isNotFound());
     }
 
-    @Test
-    public void showOneRecipeIngredientRecipeNumberFormat() throws Exception {
-        testGet(mockMvc,"/recipe/a/ingredient/1/show", status().isBadRequest());
-    }
+//    @Test
+//    public void showOneRecipeIngredientRecipeNumberFormat() throws Exception {
+//        testGet(mockMvc,"/recipe/a/ingredient/1/show", status().isBadRequest());
+//    }
 
     @Test
     public void showOneRecipeIngredientIngredientNotFound() throws Exception {
-        when(ingredientService.findByRecipeIdAndIngridientId(anyLong(), anyLong())).thenThrow(NotFoundException.class);
+        when(ingredientService.findByRecipeIdAndIngridientId(anyString(), anyString())).thenThrow(NotFoundException.class);
         testGet(mockMvc,"/recipe/1/ingredient/1/show", status().isNotFound());
     }
 
-    @Test
-    public void showOneRecipeIngredientIngredientNumberFormat() throws Exception {
-        testGet(mockMvc,"/recipe/1/ingredient/a/show", status().isBadRequest());
-    }
+//    @Test
+//    public void showOneRecipeIngredientIngredientNumberFormat() throws Exception {
+//        testGet(mockMvc,"/recipe/1/ingredient/a/show", status().isBadRequest());
+//    }
 
     @Test
     public void updateRecipeIngredient() throws Exception {
         Recipe recipe = new Recipe();
         Ingredient ingredient = new Ingredient();
-        recipe.setId(new Random().nextLong());
-        ingredient.setId(new Random().nextLong());
+        recipe.setId(randomUUID().toString());
+        ingredient.setId(randomUUID().toString());
         recipe.getIngredients().add(ingredient);
 
         when(ingredientService.findByRecipeIdAndIngridientId(recipe.getId(),
@@ -134,7 +134,7 @@ public class IngredientControllerTest {
                 ingredient);
         when(unitOfMeasureService.listAllUoms()).thenReturn(new ArrayList<>());
 
-        mockMvc.perform(get(String.format("/recipe/%d/ingredient/%d/update",
+        mockMvc.perform(get(String.format("/recipe/%s/ingredient/%s/update",
                                           recipe.getId(),
                                           ingredient.getId())))
                .andExpect(status().isOk())
@@ -149,19 +149,14 @@ public class IngredientControllerTest {
 
     @Test
     public void newIngredient() throws Exception {
-        Recipe recipe = new Recipe();
-        recipe.setId(new Random().nextLong());
-
-        when(recipeService.findById(recipe.getId())).thenReturn(recipe);
         when(unitOfMeasureService.listAllUoms()).thenReturn(new ArrayList<>());
 
-        mockMvc.perform(get(String.format("/recipe/%d/ingredient/new", recipe.getId())))
+        mockMvc.perform(get(String.format("/recipe/%s/ingredient/new", randomUUID().toString())))
                .andExpect(status().isOk())
                .andExpect(view().name("recipe/ingredient/ingredientform"))
                .andExpect(model().attributeExists("ingredient"))
                .andExpect(model().attributeExists("uomList"));
 
-        verify(recipeService, times(1)).findById(recipe.getId());
         verify(unitOfMeasureService, times(1)).listAllUoms();
     }
 
@@ -169,14 +164,14 @@ public class IngredientControllerTest {
     public void saveOrUpdateNewIngredient() throws Exception {
         Recipe recipe = new Recipe();
         Ingredient ingredient = new Ingredient();
-        recipe.setId(new Random().nextLong());
+        recipe.setId(randomUUID().toString());
 
 
-        mockMvc.perform(post(String.format("/recipe/%d/ingredient", recipe.getId())).flashAttr(
+        mockMvc.perform(post(String.format("/recipe/%s/ingredient", recipe.getId())).flashAttr(
                 "ingredient",
                 ingredient))
                .andExpect(status().is3xxRedirection())
-               .andExpect(view().name(String.format("redirect:/recipe/%d/ingredients",
+               .andExpect(view().name(String.format("redirect:/recipe/%s/ingredients",
                                                     recipe.getId())));
 
         verify(ingredientService, times(1)).saveIngredient(recipe.getId(), ingredient);
@@ -186,14 +181,14 @@ public class IngredientControllerTest {
     public void saveOrUpdateExistingIngredient() throws Exception {
         Recipe recipe = new Recipe();
         Ingredient ingredient = new Ingredient();
-        ingredient.setId(new Random().nextLong());
-        recipe.setId(new Random().nextLong());
+        ingredient.setId(randomUUID().toString());
+        recipe.setId(randomUUID().toString());
 
-        mockMvc.perform(post(String.format("/recipe/%d/ingredient", recipe.getId())).flashAttr(
+        mockMvc.perform(post(String.format("/recipe/%s/ingredient", recipe.getId())).flashAttr(
                 "ingredient",
                 ingredient))
                .andExpect(status().is3xxRedirection())
-               .andExpect(view().name(String.format("redirect:/recipe/%d/ingredient/%d/show",
+               .andExpect(view().name(String.format("redirect:/recipe/%s/ingredient/%s/show",
                                                     recipe.getId(),
                                                     ingredient.getId())));
 

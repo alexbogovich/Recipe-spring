@@ -11,5 +11,7 @@ public interface RecipeService {
 
     Recipe saveRecipe(Recipe recipe);
 
+    Recipe saveRecipe(Recipe recipe, Boolean loadIngr);
+
     void deleteById(String l);
 }

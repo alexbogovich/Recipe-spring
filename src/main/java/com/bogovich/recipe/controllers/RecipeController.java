@@ -47,9 +47,10 @@ public class RecipeController {
 
     @PostMapping("recipe")
     public String saveOrUpdate(@Valid @ModelAttribute Recipe recipe, BindingResult bindingResult) {
+        log.debug("recipe = " + recipe.getId());
         if(!bindingResult.hasErrors()) {
-            Recipe saveOrUpdateRecipe = recipeService.saveRecipe(recipe);
-            return "redirect:/recipe/" + saveOrUpdateRecipe.getId() + "/show";
+            recipe = recipeService.saveRecipe(recipe, recipe.getId() != null && !recipe.getId().isEmpty());
+            return "redirect:/recipe/" + recipe.getId() + "/show";
         } else {
             log.debug(bindingResult.getAllErrors().toString());
             return RECIPE_FORM_URL;

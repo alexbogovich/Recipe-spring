@@ -41,6 +41,13 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    public Recipe saveRecipe(Recipe recipe, Boolean loadIngr) {
+        if(loadIngr)
+            recipe.setIngredients(findById(recipe.getId()).getIngredients());
+        return saveRecipe(recipe);
+    }
+
+    @Override
     public void deleteById(String id) {
         recipeRepository.deleteById(id);
     }

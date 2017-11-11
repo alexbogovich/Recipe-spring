@@ -8,11 +8,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
+import static java.util.UUID.randomUUID;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -44,7 +42,7 @@ public class RecipeServiceImplTest {
 
     @Test
     public void deleteById() throws Exception {
-        Long id = new Random().nextLong();
+        String id = randomUUID().toString();
         recipeService.deleteById(id);
         verify(recipeRepository, times(1)).deleteById(id);
     }
@@ -52,8 +50,8 @@ public class RecipeServiceImplTest {
 
     @Test(expected = NotFoundException.class)
     public void findByIdException() throws Exception {
-        when(recipeRepository.findById(anyLong())).thenReturn(Optional.empty());
-        recipeService.findById(1L);
+        when(recipeRepository.findById(anyString())).thenReturn(Optional.empty());
+        recipeService.findById(randomUUID().toString());
     }
 
 }
