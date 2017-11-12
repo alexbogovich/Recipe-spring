@@ -1,6 +1,5 @@
 package com.bogovich.recipe.controllers;
 
-import com.bogovich.recipe.exceptions.NotFoundException;
 import com.bogovich.recipe.models.Ingredient;
 import com.bogovich.recipe.models.Recipe;
 import com.bogovich.recipe.models.UnitOfMeasure;
@@ -14,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.thymeleaf.exceptions.TemplateInputException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -70,7 +70,7 @@ public class IngredientControllerTest {
 
     @Test
     public void listIngredientsNotFound() throws Exception {
-        when(recipeService.findById(anyString())).thenThrow(NotFoundException.class);
+        when(recipeService.findById(anyString())).thenThrow(TemplateInputException.class);
         testGet(mockMvc,"/recipe/1/ingredients", status().isNotFound());
     }
 
@@ -103,7 +103,7 @@ public class IngredientControllerTest {
 
     @Test
     public void showOneRecipeIngredientRecipeNotFound() throws Exception {
-        when(ingredientService.findByRecipeIdAndIngridientId(anyString(), anyString())).thenThrow(NotFoundException.class);
+        when(ingredientService.findByRecipeIdAndIngridientId(anyString(), anyString())).thenThrow(TemplateInputException.class);
         testGet(mockMvc,"/recipe/1/ingredient/1/show", status().isNotFound());
     }
 
@@ -114,7 +114,7 @@ public class IngredientControllerTest {
 
     @Test
     public void showOneRecipeIngredientIngredientNotFound() throws Exception {
-        when(ingredientService.findByRecipeIdAndIngridientId(anyString(), anyString())).thenThrow(NotFoundException.class);
+        when(ingredientService.findByRecipeIdAndIngridientId(anyString(), anyString())).thenThrow(TemplateInputException.class);
         testGet(mockMvc,"/recipe/1/ingredient/1/show", status().isNotFound());
     }
 

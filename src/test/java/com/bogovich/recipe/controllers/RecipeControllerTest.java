@@ -53,7 +53,7 @@ public class RecipeControllerTest {
 
 //    @Test
 //    public void showByIdNotFound() throws Exception {
-//        when(recipeService.findById(anyString())).thenThrow(NotFoundException.class);
+//        when(recipeService.findById(anyString())).thenThrow(TemplateInputException.class);
 //        testGet(mockMvc,"/recipe/1/show", status().isNotFound());
 //    }
 //

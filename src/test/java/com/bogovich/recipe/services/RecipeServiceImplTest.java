@@ -49,7 +49,7 @@ public class RecipeServiceImplTest {
     }
 
 
-//    @Test(expected = NotFoundException.class)
+//    @Test(expected = TemplateInputException.class)
 //    public void findByIdException() throws Exception {
 //        when(recipeRepository.findById(anyString())).thenReturn(Mono.empty());
 //        recipeService.findById(randomUUID().toString());
