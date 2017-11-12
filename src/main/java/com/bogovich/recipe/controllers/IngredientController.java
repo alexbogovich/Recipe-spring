@@ -2,18 +2,27 @@ package com.bogovich.recipe.controllers;
 
 
 import com.bogovich.recipe.models.Ingredient;
+import com.bogovich.recipe.models.UnitOfMeasure;
 import com.bogovich.recipe.services.IngredientService;
 import com.bogovich.recipe.services.RecipeService;
 import com.bogovich.recipe.services.UnitOfMeasureService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import reactor.core.publisher.Flux;
+
+import javax.validation.Valid;
 
 @Slf4j
 @Controller
 public class IngredientController {
 
+    private static final String RECIPE_INGREDIENTFORM_URL = "recipe/ingredient/ingredientform";
     private final RecipeService recipeService;
     private final IngredientService ingredientService;
     private final UnitOfMeasureService unitOfMeasureService;
@@ -47,32 +56,40 @@ public class IngredientController {
                                          @PathVariable String ingredientId,
                                          Model model) {
         model.addAttribute("ingredient",
-                           ingredientService.findByRecipeIdAndIngridientId(recipeId, ingredientId));
-        model.addAttribute("uomList", unitOfMeasureService.listAllUoms());
+                           ingredientService.findByRecipeIdAndIngridientId(recipeId, ingredientId).block());
         model.addAttribute("recipeId", recipeId);
-        return "recipe/ingredient/ingredientform";
+        return RECIPE_INGREDIENTFORM_URL;
     }
 
     @GetMapping("recipe/{recipeId}/ingredient/new")
     public String newIngredient(@PathVariable String recipeId, Model model) {
         model.addAttribute("ingredient", new Ingredient());
-        model.addAttribute("uomList", unitOfMeasureService.listAllUoms());
         model.addAttribute("recipeId", recipeId);
-        return "recipe/ingredient/ingredientform";
+        return RECIPE_INGREDIENTFORM_URL;
     }
 
     @PostMapping("recipe/{recipeId}/ingredient")
     public String saveOrUpdate(@PathVariable String recipeId,
-                               @ModelAttribute Ingredient ingredient) {
+                               @Valid @ModelAttribute Ingredient ingredient, BindingResult bindingResult, Model model) {
         log.info(ingredient.toString());
-        ingredientService.saveIngredient(recipeId, ingredient);
-        return String.format("redirect:/recipe/%s/ingredients", recipeId);
+        if(!bindingResult.hasErrors()) {
+            ingredientService.saveIngredient(recipeId, ingredient).block();
+            return String.format("redirect:/recipe/%s/ingredients", recipeId);
+        } else {
+            log.debug(bindingResult.getAllErrors().toString());
+            return RECIPE_INGREDIENTFORM_URL;
+        }
     }
 
     @PostMapping("recipe/{recipeId}/ingredient/{ingredientId}/delete")
     public String deleteIngredient(@PathVariable String recipeId, @PathVariable String ingredientId) {
         log.debug("Delete ingredient " + ingredientId + " for recipe " + recipeId);
-        ingredientService.deleteIngredient(recipeId, ingredientId);
+        ingredientService.deleteIngredient(recipeId, ingredientId).block();
         return String.format("redirect:/recipe/%s/ingredients", recipeId);
+    }
+
+    @ModelAttribute("uomList")
+    public Flux<UnitOfMeasure> populateUOM(){
+        return unitOfMeasureService.listAllUoms();
     }
 }
