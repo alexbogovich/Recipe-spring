@@ -32,7 +32,7 @@ public class IngredientController {
     @GetMapping("/recipe/{recipeId}/ingredients")
     public String listIngredients(@PathVariable String recipeId, Model model) {
         log.debug("Getting ingredient list for recipe id: " + recipeId);
-        model.addAttribute("recipe", recipeService.findById(recipeId).block());
+        model.addAttribute("recipe", recipeService.findById(recipeId));
         return "recipe/ingredient/list";
     }
 
@@ -41,7 +41,7 @@ public class IngredientController {
                                           @PathVariable String ingredientId,
                                           Model model) {
         model.addAttribute("ingredient",
-                           ingredientService.findByRecipeIdAndIngridientId(recipeId, ingredientId).block());
+                           ingredientService.findByRecipeIdAndIngridientId(recipeId, ingredientId));
         return "recipe/ingredient/show";
     }
 
