@@ -1,39 +1,36 @@
 package com.bogovich.recipe.services;
 
-import com.bogovich.recipe.exceptions.NotFoundException;
 import com.bogovich.recipe.models.Recipe;
-import com.bogovich.recipe.repositories.RecipeRepository;
+import com.bogovich.recipe.repositories.reactive.RecipeReactiveRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @Service
 public class RecipeServiceImpl implements RecipeService {
 
-    private RecipeRepository recipeRepository;
+    private RecipeReactiveRepository recipeRepository;
 
-    public RecipeServiceImpl(RecipeRepository recipeRepository) {
+    public RecipeServiceImpl(RecipeReactiveRepository recipeRepository) {
         this.recipeRepository = recipeRepository;
     }
 
     @Override
-    public List<Recipe> getAllRecipes() {
+    public Flux<Recipe> getAllRecipes() {
         log.debug("Get all recipe");
-        return (List<Recipe>) recipeRepository.findAll();
+        return recipeRepository.findAll();
     }
 
     @Override
-    public Recipe findById(String id) {
+    public Mono<Recipe> findById(String id) {
         log.debug(String.format("Get recipe by id %s", id));
-        return recipeRepository.findById(id)
-                               .orElseThrow(() -> new NotFoundException("Recipe not found. For id = " + id));
+        return recipeRepository.findById(id);
     }
 
     @Override
-    public Recipe saveRecipe(Recipe recipe) {
+    public Mono<Recipe> saveRecipe(Recipe recipe) {
         log.debug(String.format("Save recipe id:%s desc:%s",
                                 recipe.getId(),
                                 recipe.getDescription()));
@@ -41,14 +38,18 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Recipe saveRecipe(Recipe recipe, Boolean loadIngr) {
-        if(loadIngr)
-            recipe.setIngredients(findById(recipe.getId()).getIngredients());
-        return saveRecipe(recipe);
+    public Mono<Recipe> saveRecipe(Recipe recipe, Boolean loadIngr) {
+        return findById(recipe.getId())
+                .flatMap(r -> {
+                    if(loadIngr)
+                        recipe.setIngredients(r.getIngredients());
+                    return Mono.just(recipe);
+                })
+        .flatMap(this::saveRecipe);
     }
 
     @Override
-    public void deleteById(String id) {
-        recipeRepository.deleteById(id);
+    public Mono<Void> deleteById(String id) {
+        return recipeRepository.deleteById(id);
     }
 }

@@ -56,7 +56,7 @@ public class IngredientControllerTest {
         Recipe recipe = new Recipe();
         recipe.setId(id);
 
-        when(recipeService.findById(id)).thenReturn(recipe);
+        when(recipeService.findById(id)).thenReturn(Mono.just(recipe));
 
         mockMvc.perform(get(String.format("/recipe/%s/ingredients", id)))
                .andExpect(status().isOk())

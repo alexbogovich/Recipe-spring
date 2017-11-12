@@ -32,7 +32,7 @@ public class IngredientController {
     @GetMapping("/recipe/{recipeId}/ingredients")
     public String listIngredients(@PathVariable String recipeId, Model model) {
         log.debug("Getting ingredient list for recipe id: " + recipeId);
-        model.addAttribute("recipe", recipeService.findById(recipeId));
+        model.addAttribute("recipe", recipeService.findById(recipeId).block());
         return "recipe/ingredient/list";
     }
 

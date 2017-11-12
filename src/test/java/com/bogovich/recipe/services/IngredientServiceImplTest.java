@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 
@@ -33,7 +34,7 @@ public class IngredientServiceImplTest {
         Ingredient ingredient1 = setUpIngredient(recipe);
         Ingredient ingredient2 = setUpIngredient(recipe);
 
-        when(recipeService.findById(recipe.getId())).thenReturn(recipe);
+        when(recipeService.findById(recipe.getId())).thenReturn(Mono.just(recipe));
 
         assertEquals(ingredient1,
                      ingredientService.findByRecipeIdAndIngridientId(recipe.getId(),
@@ -54,7 +55,7 @@ public class IngredientServiceImplTest {
 
     @Test(expected = RuntimeException.class)
     public void findByRecipeIdAndIngridientIdRecipeNotContainSuchIng() throws Exception {
-        when(recipeService.findById(anyString())).thenReturn(new Recipe());
+        when(recipeService.findById(anyString())).thenReturn(Mono.just(new Recipe()));
         ingredientService.findByRecipeIdAndIngridientId(randomUUID().toString(), randomUUID().toString()).block();
     }
 
@@ -65,7 +66,8 @@ public class IngredientServiceImplTest {
         Ingredient ingredient2 = setUpIngredient(recipe);
         Ingredient ingredientNew = new Ingredient();
 
-        when(recipeService.findById(recipe.getId())).thenReturn(recipe);
+        when(recipeService.findById(recipe.getId())).thenReturn(Mono.just(recipe));
+        when(recipeService.saveRecipe(any())).thenReturn(Mono.empty());
         ingredientService.saveIngredient(recipe.getId(), ingredientNew).block();
 
         assertTrue(recipe.getIngredients().contains(ingredientNew));
@@ -82,7 +84,8 @@ public class IngredientServiceImplTest {
         ingredientUpdate.setAmount(new BigDecimal(100));
         ingredientUpdate.setDescription("123");
 
-        when(recipeService.findById(recipe.getId())).thenReturn(recipe);
+        when(recipeService.findById(recipe.getId())).thenReturn(Mono.just(recipe));
+        when(recipeService.saveRecipe(any())).thenReturn(Mono.empty());
         ingredientService.saveIngredient(recipe.getId(), ingredientUpdate).block();
 
         assertTrue(recipe.getIngredients()
@@ -103,7 +106,8 @@ public class IngredientServiceImplTest {
         Ingredient ingredient1 = setUpIngredient(recipe);
         Ingredient ingredient2 = setUpIngredient(recipe);
 
-        when(recipeService.findById(recipe.getId())).thenReturn(recipe);
+        when(recipeService.findById(recipe.getId())).thenReturn(Mono.just(recipe));
+        when(recipeService.saveRecipe(any())).thenReturn(Mono.empty());
         ingredientService.deleteIngredient(recipe.getId(), ingredient1.getId()).block();
 
         assertFalse(recipe.getIngredients()
@@ -128,7 +132,8 @@ public class IngredientServiceImplTest {
         Ingredient ingredient1 = setUpIngredient(recipe);
         Ingredient ingredient2 = new Ingredient();
 
-        when(recipeService.findById(recipe.getId())).thenReturn(recipe);
+        when(recipeService.findById(recipe.getId())).thenReturn(Mono.just(recipe));
+        when(recipeService.saveRecipe(any())).thenReturn(Mono.empty());
 
         assertFalse(recipe.getIngredients().contains(ingredient2));
         ingredientService.deleteIngredient(recipe.getId(), ingredient2.getId()).block();

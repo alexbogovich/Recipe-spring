@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
+import reactor.core.publisher.Flux;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,7 @@ public class IndexControllerTest {
     @Test
     public void testMockMVC() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(indexController).build();
+        when(recipeService.getAllRecipes()).thenReturn(Flux.empty());
         mockMvc.perform(get("/")).andExpect(status().isOk()).andExpect(view().name("index"));
     }
 
@@ -52,7 +54,7 @@ public class IndexControllerTest {
         ArgumentCaptor<List<Recipe>> captor = ArgumentCaptor.forClass(List.class);
 
         //when
-        when(recipeService.getAllRecipes()).thenReturn(recipeList);
+        when(recipeService.getAllRecipes()).thenReturn(Flux.fromIterable(recipeList));
 
         //then
         assertEquals("index", indexController.getIndexPage(model));

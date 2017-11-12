@@ -1,17 +1,17 @@
 package com.bogovich.recipe.services;
 
 import com.bogovich.recipe.models.Recipe;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface RecipeService {
-    List<Recipe> getAllRecipes();
+    Flux<Recipe> getAllRecipes();
 
-    Recipe findById(String l);
+    Mono<Recipe> findById(String l);
 
-    Recipe saveRecipe(Recipe recipe);
+    Mono<Recipe> saveRecipe(Recipe recipe);
 
-    Recipe saveRecipe(Recipe recipe, Boolean loadIngr);
+    Mono<Recipe> saveRecipe(Recipe recipe, Boolean loadIngr);
 
-    void deleteById(String l);
+    Mono<Void> deleteById(String l);
 }
