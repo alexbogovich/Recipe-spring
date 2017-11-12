@@ -8,7 +8,10 @@ import com.bogovich.recipe.services.UnitOfMeasureService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Slf4j
 @Controller
@@ -48,7 +51,7 @@ public class IngredientController {
                                          Model model) {
         model.addAttribute("ingredient",
                            ingredientService.findByRecipeIdAndIngridientId(recipeId, ingredientId));
-        model.addAttribute("uomList", unitOfMeasureService.listAllUoms());
+        model.addAttribute("uomList", unitOfMeasureService.listAllUoms().collectList().block());
         model.addAttribute("recipeId", recipeId);
         return "recipe/ingredient/ingredientform";
     }
@@ -56,7 +59,7 @@ public class IngredientController {
     @GetMapping("recipe/{recipeId}/ingredient/new")
     public String newIngredient(@PathVariable String recipeId, Model model) {
         model.addAttribute("ingredient", new Ingredient());
-        model.addAttribute("uomList", unitOfMeasureService.listAllUoms());
+        model.addAttribute("uomList", unitOfMeasureService.listAllUoms().collectList().block());
         model.addAttribute("recipeId", recipeId);
         return "recipe/ingredient/ingredientform";
     }

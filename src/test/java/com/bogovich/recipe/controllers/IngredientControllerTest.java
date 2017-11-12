@@ -3,6 +3,7 @@ package com.bogovich.recipe.controllers;
 import com.bogovich.recipe.exceptions.NotFoundException;
 import com.bogovich.recipe.models.Ingredient;
 import com.bogovich.recipe.models.Recipe;
+import com.bogovich.recipe.models.UnitOfMeasure;
 import com.bogovich.recipe.services.IngredientService;
 import com.bogovich.recipe.services.RecipeService;
 import com.bogovich.recipe.services.UnitOfMeasureService;
@@ -12,9 +13,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import java.util.ArrayList;
-import java.util.Random;
+import reactor.core.publisher.Flux;
 
 import static com.bogovich.recipe.controllers.ExceptionTest.testGet;
 import static java.util.UUID.randomUUID;
@@ -132,7 +131,7 @@ public class IngredientControllerTest {
         when(ingredientService.findByRecipeIdAndIngridientId(recipe.getId(),
                                                              ingredient.getId())).thenReturn(
                 ingredient);
-        when(unitOfMeasureService.listAllUoms()).thenReturn(new ArrayList<>());
+        when(unitOfMeasureService.listAllUoms()).thenReturn(Flux.just(new UnitOfMeasure()));
 
         mockMvc.perform(get(String.format("/recipe/%s/ingredient/%s/update",
                                           recipe.getId(),
@@ -149,7 +148,7 @@ public class IngredientControllerTest {
 
     @Test
     public void newIngredient() throws Exception {
-        when(unitOfMeasureService.listAllUoms()).thenReturn(new ArrayList<>());
+        when(unitOfMeasureService.listAllUoms()).thenReturn(Flux.just(new UnitOfMeasure()));
 
         mockMvc.perform(get(String.format("/recipe/%s/ingredient/new", randomUUID().toString())))
                .andExpect(status().isOk())
