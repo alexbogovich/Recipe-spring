@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -220,6 +221,34 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
     @Override
     @Transient
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
+        initUom();
+        initCategories();
         saveAllRecipe(initData());
+    }
+
+    private void initCategories() {
+        categoryRepository.saveAll(
+                Arrays.asList(
+                        Category.of("American"),
+                        Category.of("Italian"),
+                        Category.of("Mexican"),
+                        Category.of("Fast Food")
+                )
+        );
+    }
+
+    private void initUom() {
+        unitOfMeasureRepository.saveAll(
+                Arrays.asList(
+                        UnitOfMeasure.of("Teaspoon"),
+                        UnitOfMeasure.of("Tablespoon"),
+                        UnitOfMeasure.of("Cup"),
+                        UnitOfMeasure.of("Pinch"),
+                        UnitOfMeasure.of("Ounce"),
+                        UnitOfMeasure.of("Each"),
+                        UnitOfMeasure.of("Dash"),
+                        UnitOfMeasure.of("Pint")
+                )
+        );
     }
 }

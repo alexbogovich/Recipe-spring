@@ -26,23 +26,29 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public Recipe findById(Long l) {
-        log.debug(String.format("Get recipe by id %d", l));
-        return recipeRepository.findById(l)
-                               .orElseThrow(() -> new NotFoundException("Recipe not found. For id = " + l));
+    public Recipe findById(String id) {
+        log.debug(String.format("Get recipe by id %s", id));
+        return recipeRepository.findById(id)
+                               .orElseThrow(() -> new NotFoundException("Recipe not found. For id = " + id));
     }
 
     @Override
-    @Transactional
     public Recipe saveRecipe(Recipe recipe) {
-        log.debug(String.format("Save recipe id:%d desc:%s",
+        log.debug(String.format("Save recipe id:%s desc:%s",
                                 recipe.getId(),
                                 recipe.getDescription()));
         return recipeRepository.save(recipe);
     }
 
     @Override
-    public void deleteById(Long l) {
-        recipeRepository.deleteById(l);
+    public Recipe saveRecipe(Recipe recipe, Boolean loadIngr) {
+        if(loadIngr)
+            recipe.setIngredients(findById(recipe.getId()).getIngredients());
+        return saveRecipe(recipe);
+    }
+
+    @Override
+    public void deleteById(String id) {
+        recipeRepository.deleteById(id);
     }
 }
