@@ -14,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import static com.bogovich.recipe.controllers.ExceptionTest.testGet;
 import static java.util.UUID.randomUUID;
@@ -85,7 +86,7 @@ public class IngredientControllerTest {
 
         when(ingredientService.findByRecipeIdAndIngridientId(recipe.getId(),
                                                              ingredient.getId())).thenReturn(
-                ingredient);
+                Mono.just(ingredient));
 
         mockMvc.perform(get(String.format("/recipe/%s/ingredient/%s/show",
                                           recipe.getId(),
@@ -130,7 +131,7 @@ public class IngredientControllerTest {
 
         when(ingredientService.findByRecipeIdAndIngridientId(recipe.getId(),
                                                              ingredient.getId())).thenReturn(
-                ingredient);
+                Mono.just(ingredient));
         when(unitOfMeasureService.listAllUoms()).thenReturn(Flux.just(new UnitOfMeasure()));
 
         mockMvc.perform(get(String.format("/recipe/%s/ingredient/%s/update",
@@ -165,6 +166,7 @@ public class IngredientControllerTest {
         Ingredient ingredient = new Ingredient();
         recipe.setId(randomUUID().toString());
 
+        when(ingredientService.saveIngredient(recipe.getId(), ingredient)).thenReturn(Mono.empty());
 
         mockMvc.perform(post(String.format("/recipe/%s/ingredient", recipe.getId())).flashAttr(
                 "ingredient",
@@ -182,6 +184,8 @@ public class IngredientControllerTest {
         Ingredient ingredient = new Ingredient();
         ingredient.setId(randomUUID().toString());
         recipe.setId(randomUUID().toString());
+
+        when(ingredientService.saveIngredient(recipe.getId(), ingredient)).thenReturn(Mono.empty());
 
         mockMvc.perform(post(String.format("/recipe/%s/ingredient", recipe.getId())).flashAttr(
                 "ingredient",

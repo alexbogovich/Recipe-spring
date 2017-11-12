@@ -3,7 +3,6 @@ package com.bogovich.recipe.services;
 import com.bogovich.recipe.models.Ingredient;
 import com.bogovich.recipe.models.Recipe;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -12,7 +11,6 @@ import java.math.BigDecimal;
 
 import static java.util.UUID.randomUUID;
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 public class IngredientServiceImplTest {
@@ -39,25 +37,25 @@ public class IngredientServiceImplTest {
 
         assertEquals(ingredient1,
                      ingredientService.findByRecipeIdAndIngridientId(recipe.getId(),
-                                                                     ingredient1.getId()));
+                                                                     ingredient1.getId()).block());
         verify(recipeService, times(1)).findById(recipe.getId());
 
         assertEquals(ingredient2,
                      ingredientService.findByRecipeIdAndIngridientId(recipe.getId(),
-                                                                     ingredient2.getId()));
+                                                                     ingredient2.getId()).block());
         verify(recipeService, times(2)).findById(recipe.getId());
     }
 
     @Test(expected = RuntimeException.class)
     public void findByRecipeIdAndIngridientIdInvalidRecipeId() throws Exception {
         when(recipeService.findById(anyString())).thenReturn(null);
-        ingredientService.findByRecipeIdAndIngridientId(randomUUID().toString(), randomUUID().toString());
+        ingredientService.findByRecipeIdAndIngridientId(randomUUID().toString(), randomUUID().toString()).block();
     }
 
     @Test(expected = RuntimeException.class)
     public void findByRecipeIdAndIngridientIdRecipeNotContainSuchIng() throws Exception {
         when(recipeService.findById(anyString())).thenReturn(new Recipe());
-        ingredientService.findByRecipeIdAndIngridientId(randomUUID().toString(), randomUUID().toString());
+        ingredientService.findByRecipeIdAndIngridientId(randomUUID().toString(), randomUUID().toString()).block();
     }
 
     @Test
@@ -68,7 +66,7 @@ public class IngredientServiceImplTest {
         Ingredient ingredientNew = new Ingredient();
 
         when(recipeService.findById(recipe.getId())).thenReturn(recipe);
-        ingredientService.saveIngredient(recipe.getId(), ingredientNew);
+        ingredientService.saveIngredient(recipe.getId(), ingredientNew).block();
 
         assertTrue(recipe.getIngredients().contains(ingredientNew));
         assertEquals(3, recipe.getIngredients().size());
@@ -85,7 +83,7 @@ public class IngredientServiceImplTest {
         ingredientUpdate.setDescription("123");
 
         when(recipeService.findById(recipe.getId())).thenReturn(recipe);
-        ingredientService.saveIngredient(recipe.getId(), ingredientUpdate);
+        ingredientService.saveIngredient(recipe.getId(), ingredientUpdate).block();
 
         assertTrue(recipe.getIngredients()
                          .stream()
@@ -96,7 +94,7 @@ public class IngredientServiceImplTest {
     @Test(expected = RuntimeException.class)
     public void saveIngredientRecipeNotExist() throws Exception {
         when(recipeService.findById(anyString())).thenReturn(null);
-        ingredientService.saveIngredient(randomUUID().toString(), new Ingredient());
+        ingredientService.saveIngredient(randomUUID().toString(), new Ingredient()).block();
     }
 
     @Test
@@ -106,7 +104,7 @@ public class IngredientServiceImplTest {
         Ingredient ingredient2 = setUpIngredient(recipe);
 
         when(recipeService.findById(recipe.getId())).thenReturn(recipe);
-        ingredientService.deleteIngredient(recipe.getId(), ingredient1.getId());
+        ingredientService.deleteIngredient(recipe.getId(), ingredient1.getId()).block();
 
         assertFalse(recipe.getIngredients()
                           .stream()
@@ -115,7 +113,7 @@ public class IngredientServiceImplTest {
         verify(recipeService, times(1)).findById(recipe.getId());
         verify(recipeService, times(1)).saveRecipe(any());
 
-        ingredientService.deleteIngredient(recipe.getId(), ingredient2.getId());
+        ingredientService.deleteIngredient(recipe.getId(), ingredient2.getId()).block();
         assertFalse(recipe.getIngredients()
                           .stream()
                           .anyMatch(i -> Ingredient.isEqualByValue(i, ingredient2)));
@@ -133,7 +131,7 @@ public class IngredientServiceImplTest {
         when(recipeService.findById(recipe.getId())).thenReturn(recipe);
 
         assertFalse(recipe.getIngredients().contains(ingredient2));
-        ingredientService.deleteIngredient(recipe.getId(), ingredient2.getId());
+        ingredientService.deleteIngredient(recipe.getId(), ingredient2.getId()).block();
         assertFalse(recipe.getIngredients().contains(ingredient2));
         assertEquals(1, recipe.getIngredients().size());
 

@@ -41,7 +41,7 @@ public class IngredientController {
                                           @PathVariable String ingredientId,
                                           Model model) {
         model.addAttribute("ingredient",
-                           ingredientService.findByRecipeIdAndIngridientId(recipeId, ingredientId));
+                           ingredientService.findByRecipeIdAndIngridientId(recipeId, ingredientId).block());
         return "recipe/ingredient/show";
     }
 
@@ -50,7 +50,7 @@ public class IngredientController {
                                          @PathVariable String ingredientId,
                                          Model model) {
         model.addAttribute("ingredient",
-                           ingredientService.findByRecipeIdAndIngridientId(recipeId, ingredientId));
+                           ingredientService.findByRecipeIdAndIngridientId(recipeId, ingredientId).block());
         model.addAttribute("uomList", unitOfMeasureService.listAllUoms().collectList().block());
         model.addAttribute("recipeId", recipeId);
         return "recipe/ingredient/ingredientform";
@@ -68,14 +68,14 @@ public class IngredientController {
     public String saveOrUpdate(@PathVariable String recipeId,
                                @ModelAttribute Ingredient ingredient) {
         log.info(ingredient.toString());
-        ingredientService.saveIngredient(recipeId, ingredient);
+        ingredientService.saveIngredient(recipeId, ingredient).block();
         return String.format("redirect:/recipe/%s/ingredients", recipeId);
     }
 
     @PostMapping("recipe/{recipeId}/ingredient/{ingredientId}/delete")
     public String deleteIngredient(@PathVariable String recipeId, @PathVariable String ingredientId) {
         log.debug("Delete ingredient " + ingredientId + " for recipe " + recipeId);
-        ingredientService.deleteIngredient(recipeId, ingredientId);
+        ingredientService.deleteIngredient(recipeId, ingredientId).block();
         return String.format("redirect:/recipe/%s/ingredients", recipeId);
     }
 }

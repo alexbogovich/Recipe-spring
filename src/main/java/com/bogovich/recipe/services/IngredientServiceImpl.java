@@ -5,6 +5,7 @@ import com.bogovich.recipe.models.Ingredient;
 import com.bogovich.recipe.models.Recipe;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.util.stream.Collectors;
 
@@ -18,8 +19,8 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public Ingredient findByRecipeIdAndIngridientId(String recipeId, String ingredientId) {
-        return recipeService.findById(recipeId)
+    public Mono<Ingredient> findByRecipeIdAndIngridientId(String recipeId, String ingredientId) {
+        return Mono.just(recipeService.findById(recipeId)
                             .getIngredients()
                             .stream()
                             .filter(ing -> ing.getId().equals(ingredientId))
@@ -27,21 +28,23 @@ public class IngredientServiceImpl implements IngredientService {
                             .orElseThrow(() -> new NotFoundException(String.format(
                                     "No such Ingredient id = %s for recipe id = %s",
                                     ingredientId,
-                                    recipeId)));
+                                    recipeId))));
     }
 
     @Override
-    public void saveIngredient(String rid, Ingredient ingredient) {
+    public Mono<Void> saveIngredient(String rid, Ingredient ingredient) {
         recipeService.saveRecipe(recipeService.findById(rid).updateIngredient(ingredient));
+        return Mono.empty();
     }
 
     @Override
-    public void deleteIngredient(String rid, String iid) {
+    public Mono<Void> deleteIngredient(String rid, String iid) {
         Recipe recipe = recipeService.findById(rid);
         recipe.setIngredients(recipe.getIngredients()
                 .stream()
                 .filter(i -> !i.getId().equals(iid))
                 .collect(Collectors.toSet()));
         recipeService.saveRecipe(recipe);
+        return Mono.empty();
     }
 }
