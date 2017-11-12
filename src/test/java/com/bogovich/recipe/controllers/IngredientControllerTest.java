@@ -188,9 +188,8 @@ public class IngredientControllerTest {
                 "ingredient",
                 ingredient))
                .andExpect(status().is3xxRedirection())
-               .andExpect(view().name(String.format("redirect:/recipe/%s/ingredient/%s/show",
-                                                    recipe.getId(),
-                                                    ingredient.getId())));
+               .andExpect(view().name(String.format("redirect:/recipe/%s/ingredients",
+                                                    recipe.getId())));
 
         verify(ingredientService, times(1)).saveIngredient(recipe.getId(), ingredient);
     }

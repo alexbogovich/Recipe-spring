@@ -100,7 +100,6 @@ public class IngredientServiceImplTest {
     }
 
     @Test
-    @Ignore
     public void deleteIngredient() throws Exception {
         Recipe recipe = setUpRecipe(randomUUID().toString());
         Ingredient ingredient1 = setUpIngredient(recipe);
@@ -114,6 +113,7 @@ public class IngredientServiceImplTest {
                           .anyMatch(i -> Ingredient.isEqualByValue(i, ingredient1)));
         assertEquals(1, recipe.getIngredients().size());
         verify(recipeService, times(1)).findById(recipe.getId());
+        verify(recipeService, times(1)).saveRecipe(any());
 
         ingredientService.deleteIngredient(recipe.getId(), ingredient2.getId());
         assertFalse(recipe.getIngredients()
@@ -121,13 +121,24 @@ public class IngredientServiceImplTest {
                           .anyMatch(i -> Ingredient.isEqualByValue(i, ingredient2)));
         assertEquals(0, recipe.getIngredients().size());
         verify(recipeService, times(2)).findById(recipe.getId());
+        verify(recipeService, times(2)).saveRecipe(any());
     }
 
-    @Test(expected = RuntimeException.class)
-    @Ignore
-    public void deleteIngredientException() throws Exception {
-        when(recipeService.findById(anyString())).thenReturn(new Recipe());
-        ingredientService.deleteIngredient(randomUUID().toString(), randomUUID().toString());
+    @Test
+    public void deleteIngredientNotContain() throws Exception {
+        Recipe recipe = setUpRecipe(randomUUID().toString());
+        Ingredient ingredient1 = setUpIngredient(recipe);
+        Ingredient ingredient2 = new Ingredient();
+
+        when(recipeService.findById(recipe.getId())).thenReturn(recipe);
+
+        assertFalse(recipe.getIngredients().contains(ingredient2));
+        ingredientService.deleteIngredient(recipe.getId(), ingredient2.getId());
+        assertFalse(recipe.getIngredients().contains(ingredient2));
+        assertEquals(1, recipe.getIngredients().size());
+
+        verify(recipeService, times(1)).findById(recipe.getId());
+        verify(recipeService, times(1)).saveRecipe(any());
     }
 
     private Recipe setUpRecipe(String id) {
