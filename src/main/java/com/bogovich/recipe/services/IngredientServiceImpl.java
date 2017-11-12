@@ -2,9 +2,11 @@ package com.bogovich.recipe.services;
 
 import com.bogovich.recipe.exceptions.NotFoundException;
 import com.bogovich.recipe.models.Ingredient;
+import com.bogovich.recipe.models.Recipe;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -34,14 +36,12 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public void deleteIngredient(String rid, Ingredient ingredient) {
-        deleteIngredient(rid, ingredient.getId());
-    }
-
-    @Override
     public void deleteIngredient(String rid, String iid) {
-//        Ingredient ingredient = findByRecipeIdAndIngridientId(rid, iid);
-//        ingredient.getRecipe().getIngredients().remove(ingredient);
-//        ingredient.setRecipe(null);
+        Recipe recipe = recipeService.findById(rid);
+        recipe.setIngredients(recipe.getIngredients()
+                .stream()
+                .filter(i -> !i.getId().equals(iid))
+                .collect(Collectors.toSet()));
+        recipeService.saveRecipe(recipe);
     }
 }

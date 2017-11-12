@@ -66,11 +66,7 @@ public class IngredientController {
                                @ModelAttribute Ingredient ingredient) {
         log.info(ingredient.toString());
         ingredientService.saveIngredient(recipeId, ingredient);
-        if (ingredient.getId() != null) {
-            return "redirect:/recipe/" + recipeId + "/ingredient/" + ingredient.getId() + "/show";
-        } else {
-            return "redirect:/recipe/" + recipeId + "/ingredients";
-        }
+        return String.format("redirect:/recipe/%s/ingredients", recipeId);
     }
 
     @PostMapping("recipe/{recipeId}/ingredient/{ingredientId}/delete")

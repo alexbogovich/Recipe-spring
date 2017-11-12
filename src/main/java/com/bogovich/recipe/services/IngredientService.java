@@ -7,7 +7,5 @@ public interface IngredientService {
 
     void saveIngredient(String rid, Ingredient ingredient);
 
-    void deleteIngredient(String rid, Ingredient ingredient);
-
     void deleteIngredient(String rid, String iid);
 }
