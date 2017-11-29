@@ -1,7 +1,6 @@
-jobs:
-  build:
-    docker:
-      - image: circleci/openjdk:9-jdk
+machine:
+  java:
+    version: openjdk9
 
 test:
     post:
