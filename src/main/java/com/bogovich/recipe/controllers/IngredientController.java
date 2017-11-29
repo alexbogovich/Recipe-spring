@@ -6,7 +6,6 @@ import com.bogovich.recipe.models.UnitOfMeasure;
 import com.bogovich.recipe.services.IngredientService;
 import com.bogovich.recipe.services.RecipeService;
 import com.bogovich.recipe.services.UnitOfMeasureService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,7 +17,7 @@ import reactor.core.publisher.Flux;
 
 import javax.validation.Valid;
 
-@Slf4j
+//@Slf4j
 @Controller
 public class IngredientController {
 
@@ -37,7 +36,7 @@ public class IngredientController {
 
     @GetMapping("/recipe/{recipeId}/ingredients")
     public String listIngredients(@PathVariable String recipeId, Model model) {
-        log.debug("Getting ingredient list for recipe id: " + recipeId);
+//        log.debug("Getting ingredient list for recipe id: " + recipeId);
         model.addAttribute("recipe", recipeService.findById(recipeId));
         return "recipe/ingredient/list";
     }
@@ -71,19 +70,19 @@ public class IngredientController {
     @PostMapping("recipe/{recipeId}/ingredient")
     public String saveOrUpdate(@PathVariable String recipeId,
                                @Valid @ModelAttribute Ingredient ingredient, BindingResult bindingResult, Model model) {
-        log.info(ingredient.toString());
+//        log.info(ingredient.toString());
         if(!bindingResult.hasErrors()) {
             ingredientService.saveIngredient(recipeId, ingredient).block();
             return String.format("redirect:/recipe/%s/ingredients", recipeId);
         } else {
-            log.debug(bindingResult.getAllErrors().toString());
+//            log.debug(bindingResult.getAllErrors().toString());
             return RECIPE_INGREDIENTFORM_URL;
         }
     }
 
     @PostMapping("recipe/{recipeId}/ingredient/{ingredientId}/delete")
     public String deleteIngredient(@PathVariable String recipeId, @PathVariable String ingredientId) {
-        log.debug("Delete ingredient " + ingredientId + " for recipe " + recipeId);
+//        log.debug("Delete ingredient " + ingredientId + " for recipe " + recipeId);
         ingredientService.deleteIngredient(recipeId, ingredientId).block();
         return String.format("redirect:/recipe/%s/ingredients", recipeId);
     }

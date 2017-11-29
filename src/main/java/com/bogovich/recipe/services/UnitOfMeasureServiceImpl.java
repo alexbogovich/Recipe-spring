@@ -2,11 +2,10 @@ package com.bogovich.recipe.services;
 
 import com.bogovich.recipe.models.UnitOfMeasure;
 import com.bogovich.recipe.repositories.reactive.UnitOfMeasureReactiveRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
-@Slf4j
+//@Slf4j
 @Service
 public class UnitOfMeasureServiceImpl implements UnitOfMeasureService {
 

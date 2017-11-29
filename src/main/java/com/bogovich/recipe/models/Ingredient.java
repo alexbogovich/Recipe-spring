@@ -1,8 +1,5 @@
 package com.bogovich.recipe.models;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import javax.validation.constraints.Min;
@@ -12,9 +9,9 @@ import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.UUID;
 
-@Setter
-@Getter
-@NoArgsConstructor
+//@Setter
+//@Getter
+//@NoArgsConstructor
 public class Ingredient {
     private String id = UUID.randomUUID().toString();
     @NotBlank
@@ -32,6 +29,9 @@ public class Ingredient {
         this.description = description;
         this.amount = amount;
         this.uom = uom;
+    }
+
+    public Ingredient() {
     }
 
     public static Boolean isEqualByValue(Ingredient i1, Ingredient i2) {
@@ -53,5 +53,37 @@ public class Ingredient {
         this.amount = amount;
         this.uom = uom;
         return this;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public UnitOfMeasure getUom() {
+        return uom;
+    }
+
+    public void setUom(UnitOfMeasure uom) {
+        this.uom = uom;
     }
 }

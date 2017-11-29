@@ -2,13 +2,12 @@ package com.bogovich.recipe.services;
 
 import com.bogovich.recipe.models.Ingredient;
 import com.bogovich.recipe.models.Recipe;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.util.stream.Collectors;
 
-@Slf4j
+//@Slf4j
 @Service
 public class IngredientServiceImpl implements IngredientService {
     private final RecipeService recipeService;

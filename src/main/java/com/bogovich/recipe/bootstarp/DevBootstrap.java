@@ -4,7 +4,6 @@ import com.bogovich.recipe.models.*;
 import com.bogovich.recipe.repositories.CategoryRepository;
 import com.bogovich.recipe.repositories.RecipeRepository;
 import com.bogovich.recipe.repositories.UnitOfMeasureRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.data.annotation.Transient;
@@ -15,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Slf4j
+//@Slf4j
 @Component
 public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
@@ -32,13 +31,13 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
     }
 
     private void saveAllRecipe(List<Recipe> recipeList) {
-        log.debug("Start save AllRecipe");
+//        log.debug("Start save AllRecipe");
         recipeRepository.saveAll(recipeList);
-        log.debug("End save AllRecipe");
+//        log.debug("End save AllRecipe");
     }
 
     private List<Recipe> initData() {
-        log.debug("Start initData");
+//        log.debug("Start initData");
         List<Recipe> recipeList = new ArrayList<>();
         //get optionals
         UnitOfMeasure eachUom = unitOfMeasureRepository.findByDescription("Each").orElseThrow(null);
@@ -213,7 +212,7 @@ public class DevBootstrap implements ApplicationListener<ContextRefreshedEvent> 
         tacosRecipe.getCategories().add(mexicanCategory);
 
         recipeList.add(tacosRecipe);
-        log.debug("End initData");
+//        log.debug("End initData");
         return recipeList;
     }
 

@@ -1,14 +1,13 @@
 package com.bogovich.recipe.services;
 
 import com.bogovich.recipe.repositories.reactive.RecipeReactiveRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 
-@Slf4j
+//@Slf4j
 @Service
 public class ImageServiceImpl implements ImageService {
         private final RecipeReactiveRepository recipeReactiveRepository;
